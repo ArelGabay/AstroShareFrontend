@@ -1,56 +1,20 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import "./App.css";
+import { Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
-// Define the Post interface
-interface Posts {
-  title: string;
-  content: string;
-  sender: string;
-}
-
-// Create PostList component to fetch and display posts
-function PostList() {
-  const [posts, setPosts] = useState<Posts[]>([]);
-
-  // Fetch posts from the backend when the component mounts
-  useEffect(() => {
-    axios
-      .get<Posts[]>("http://localhost:3000/api/posts")
-      .then((response) => {
-        setPosts(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching posts:", error);
-      });
-  }, []);
-
+export default function App() {
   return (
-    <div>
-      <h1>Posts</h1>
-      {/* Render each post */}
-      <ul>
-        {posts.map((post, index) => (
-          <li key={index}>
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-            <p>
-              <strong>Sender:</strong> {post.sender}
-            </p>
-          </li>
-        ))}
-      </ul>
+    <div> {/* Wrap everything in a single div to prevent React fragments */}
+      <nav>
+        <Link to="/">Home</Link> | <Link to="/login">Login</Link> | <Link to="/register">Register</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
     </div>
   );
 }
-
-function App() {
-  return (
-    <div className="App">
-      {/* Render the PostList component */}
-      <PostList />
-    </div>
-  );
-}
-
-export default App;
