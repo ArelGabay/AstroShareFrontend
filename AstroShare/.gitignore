@@ -7,10 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+AstroShare/node_modules
+AstroShare/dist
+AstroShare/dist-ssr
+AstroShare/*.local
 
 # Editor directories and files
 .vscode/*
