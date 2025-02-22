@@ -30,15 +30,19 @@ export default function Login() {
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", data);
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/login",
+        data
+      );
       console.log("Login successful:", response.data);
 
-      localStorage.setItem("name", response.data.name);
+      localStorage.setItem("username", response.data.userName);
+      console.log("username:", response.data.userName);
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken); // Store refresh token
 
-      login(response.data.name); // Update global state using login function
-  
+      login(response.data.userName); // Update global state using login function
+
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
@@ -53,14 +57,28 @@ export default function Login() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
           <label htmlFor="email">Email</label>
-          <input id="email" type="email" {...register("email")} className={errors.email ? "error" : ""} />
-          {errors.email && <p className="error-message">{errors.email.message}</p>}
+          <input
+            id="email"
+            type="email"
+            {...register("email")}
+            className={errors.email ? "error" : ""}
+          />
+          {errors.email && (
+            <p className="error-message">{errors.email.message}</p>
+          )}
         </div>
 
         <div className="form-group">
           <label htmlFor="password">Password</label>
-          <input id="password" type="password" {...register("password")} className={errors.password ? "error" : ""} />
-          {errors.password && <p className="error-message">{errors.password.message}</p>}
+          <input
+            id="password"
+            type="password"
+            {...register("password")}
+            className={errors.password ? "error" : ""}
+          />
+          {errors.password && (
+            <p className="error-message">{errors.password.message}</p>
+          )}
         </div>
 
         <button type="submit">Login</button>
