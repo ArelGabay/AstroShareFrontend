@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import "./Form.css"
 
 interface FormDataType {
   profilePicture: File[];
@@ -49,6 +51,34 @@ const RegistrationForm: FC = () => {
   };
 
   const { ref, ...rest } = register("profilePicture");
+  
+  const onGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+    console.log("Google login successful:", credentialResponse);
+
+    try {
+        if (!credentialResponse.credential) {
+            throw new Error("No Google credential provided");
+        }
+
+        const response = await axios.post("http://localhost:3000/api/auth/google", {
+            credential: credentialResponse.credential, // Send credential to backend
+        });
+
+        console.log("Google login success:", response.data);
+        
+        // Store access token & refresh token
+        console.log("Current refreshToken before saving:", localStorage.getItem("refreshToken"));
+        localStorage.removeItem("refreshToken"); // Clear old refresh token
+        localStorage.setItem("refreshToken", response.data.refreshToken); // Save new refresh token
+        
+    } catch (error) {
+        console.error("Google login error:", error);
+    }
+};
+
+  const onGoogleLoginFailure = () => {
+      console.error("Google login failed");
+      };
 
   return (
     <form
@@ -146,6 +176,16 @@ const RegistrationForm: FC = () => {
         <button type="submit" className="btn btn-outline-primary">
           Register
         </button>
+        <div className="google-login-wrapper">
+          <GoogleLogin
+            onSuccess={onGoogleLoginSuccess}
+            onError={onGoogleLoginFailure}
+            theme="outline"
+            size="large"
+            shape="rectangular"
+            width="100%"  // Ensures full width
+          />
+        </div>
       </div>
     </form>
   );
