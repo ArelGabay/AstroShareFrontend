@@ -1,0 +1,30 @@
+.pagination {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  padding: 10px 14px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.page-link:hover {
+  background-color: #f0f0f0;
+}
+
+.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
