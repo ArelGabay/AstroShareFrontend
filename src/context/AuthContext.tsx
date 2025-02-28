@@ -13,14 +13,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedName = localStorage.getItem("name");
+    const storedName = localStorage.getItem("userName");
     if (storedName) {
-      setUser(storedName);
+        setUser(storedName);
     }
-  }, []);
+}, [user]); // Depend on `user`, so UI updates immediately
 
   const login = (name: string) => {
-    localStorage.setItem("name", name);
+    localStorage.setItem("userName", name);
     setUser(name);
   };
 
@@ -33,12 +33,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
+      // Remove refresh token from local storage first
+      localStorage.removeItem("userName");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+
       console.log("Sending logout request with refreshToken:", refreshToken); // Debugging
 
       await axios.post("http://localhost:3000/api/auth/logout", { refreshToken });
 
       // Ensure refreshToken is removed after logout
-      localStorage.removeItem("name");
+      localStorage.removeItem("userName");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
 

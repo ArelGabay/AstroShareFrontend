@@ -60,3 +60,69 @@ button {
 button:hover {
   background: #0056b3;
 }
+
+/* Back Arrow Button */
+.back-arrow-button {
+  background-color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.back-arrow-button:hover {
+  background-color: #f2f2f2;
+  transform: scale(1.1);
+}
+
+/* Arrow Icon */
+.arrow-icon {
+  color: black;
+  font-size: 20px;
+}
+
+/* Google Login Button Styling */
+.google-login-container {
+  width: 100%; /* Match Login button width */
+  display: flex;
+  justify-content: center; /* Center it */
+  margin-top: 10px; /* Adjust spacing */
+}
+
+.google-login-container > div {
+  width: 100% !important; /* Force full width */
+  max-width: 100% !important;
+}
+
+.google-login-container iframe {
+  width: 100% !important; /* Force full width */
+  height: 50px !important; /* Same height as Login */
+}
+
+.google-login-container button {
+  width: 100% !important; /* Match Login button */
+  height: 50px !important; /* Same height as Login */
+  font-size: 18px !important; /* Match text size */
+  font-weight: bold !important;
+  border-radius: 4px !important;
+  background: #007bff !important; /* Same blue as Login */
+  color: white !important; /* White text */
+  border: none !important;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.google-login-container button:hover {
+  background: #0056b3 !important; /* Hover effect */
+}
