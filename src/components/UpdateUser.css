@@ -1,0 +1,97 @@
+/* UpdateUser.css */
+.update-user-card {
+  display: flex;
+  flex-direction: row;
+  width: 600px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.update-user-card .card-img {
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  align-self: flex-start;
+  padding: 1rem;
+}
+
+.update-user-card .card-content {
+  padding: 1rem;
+  flex: 1;
+}
+
+.update-user-card .card-info {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.update-user-card .btn-edit {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.update-user-card .btn-edit:hover {
+  background-color: #0056b3;
+}
+
+.update-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.update-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.update-form input[type="password"],
+.update-form input[type="file"] {
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-update {
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-update:hover {
+  background-color: #218838;
+}
+
+.btn-cancel {
+  padding: 0.5rem 1rem;
+  background-color: #dc3545;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-cancel:hover {
+  background-color: #c82333;
+}
+
+.update-message {
+  margin-top: 1rem;
+  font-weight: bold;
+}

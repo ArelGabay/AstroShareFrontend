@@ -1,0 +1,9 @@
+/* ProfilePage.css */
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 20px; /* spacing between the update card and post list */
+  padding: 20px;
+}
