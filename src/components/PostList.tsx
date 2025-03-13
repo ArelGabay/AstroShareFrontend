@@ -4,13 +4,23 @@ import Pagination from "./Pagination";
 import axios from "axios";
 
 interface PostType {
-  id: number | string;
+  _id: string;
   title: string;
   content: string;
   sender: string;
+  pictureUrl?: string;
+  likes?: string[];
 }
 
-const PostList: FC = () => {
+interface PostListProps {
+  filterByUser?: boolean;
+  userName?: string;
+}
+
+const PostList: FC<PostListProps> = ({
+  filterByUser = false,
+  userName = "",
+}) => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const postsPerPage = 5; // Adjust as needed
@@ -18,7 +28,11 @@ const PostList: FC = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/posts");
+        let url = "http://localhost:3000/api/posts";
+        if (filterByUser && userName) {
+          url = `http://localhost:3000/api/posts/sender/${userName}`;
+        }
+        const response = await axios.get(url);
         console.log(response);
         setPosts(response.data);
       } catch (error) {
@@ -51,7 +65,7 @@ const PostList: FC = () => {
         }}
       >
         {currentPosts.map((post) => (
-          <Post key={post.id} post={post} />
+          <Post key={post._id} post={post} />
         ))}
       </div>
       <Pagination
