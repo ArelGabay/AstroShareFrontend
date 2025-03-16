@@ -1,0 +1,89 @@
+.comments-list-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  height: calc(
+    100vh - 80px
+  ); /* Adjust the 150px based on your navbar and inline form height */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.comments-list {
+  flex: 1;
+  overflow-y: auto;
+  /* Removed border and border-radius for a frameless look, you can add these if desired */
+  padding: 10px;
+  border: 4px solid #f9f9f9;
+  background-color: #fff;
+}
+
+.add-comment-form-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.add-comment-form-inline input {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.inline-add-btn,
+.inline-cancel-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.inline-add-btn {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.inline-add-btn:hover {
+  background-color: #45a049;
+}
+
+.inline-cancel-btn {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.inline-cancel-btn:hover {
+  background-color: #e53935;
+}
+
+/* Floating add comment button in bottom right */
+.add-comment-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4caf50; /* Green background */
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.add-comment-button:hover {
+  background-color: #45a049;
+}

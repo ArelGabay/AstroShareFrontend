@@ -3,6 +3,7 @@ import { useAuth } from "./context/useAuth";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile.tsx";
+import CommentsPage from "./pages/CommentsPage.tsx"; // Page for comments
 import PostList from "./components/PostList"; // Directly showing posts
 import "./App.css"; // Import CSS
 
@@ -65,6 +66,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/comments/:postId" element={<CommentsPage />} />
       </Routes>
     </div>
   );

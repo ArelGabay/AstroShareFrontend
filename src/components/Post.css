@@ -1,63 +1,174 @@
+/* Overall Post Card with fixed dimensions */
 .post-card {
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-bottom: 20px;
   background-color: #fff;
-  width: 300px;
-  margin: 10px;
-  transition: transform 0.2s ease-in-out;
+  width: 300px; /* Fixed width */
+  height: 500px; /* Enlarged fixed height */
+  display: flex;
+  flex-direction: column;
 }
 
-.post-card:hover {
-  transform: scale(1.02);
+/* Header */
+.post-header {
+  margin-bottom: 12px;
 }
 
-.post-header .post-title {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-  color: #333;
+.post-title {
+  font-size: 1.3rem;
+  margin: 0;
 }
 
-.post-header .post-sender {
-  color: #555;
-  margin-bottom: 15px;
-}
-
-.post-body .post-content {
+.post-sender {
   color: #666;
-  line-height: 1.5;
+  margin: 4px 0;
+}
+
+/* Body */
+.post-body {
+  flex: 1;
+  margin-bottom: 12px;
+}
+
+.post-content {
+  height: 120px; /* Fixed height for text area */
+  overflow-y: auto; /* Vertical scrolling if needed */
+  overflow-x: hidden;
+  white-space: normal;
+  word-wrap: break-word;
+  margin-bottom: 12px;
+}
+
+/* Picture container: fixed to 200px x 200px */
+.post-picture-container {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 20px auto 8px auto;
 }
 
 .post-image {
   width: 100%;
-  height: auto;
-  margin-bottom: 10px;
-  border-radius: 4px;
+  height: 100%;
+  object-fit: cover;
 }
 
-.post-footer {
-  margin-top: 15px;
+/* Placeholder for no picture: white background with refined border */
+.no-picture {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box; /* Include border in element dimensions */
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
 }
 
-.like-button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: #fff;
+.no-picture-icon {
+  font-size: 36px;
+  color: #bbb;
+}
+
+/* Footer wrapper: using margin-top: auto to push it to the bottom */
+.post-footer-wrapper {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Footer layout */
+.post-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Like and comment sections */
+.like-section,
+.comment-section {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Icon button styling for a modern, circular look */
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   cursor: pointer;
-  transition: background-color 0.3s;
+  margin-right: 5px;
 }
 
-.like-button:hover {
-  background-color: #0056b3;
+.icon-button:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.05);
 }
 
-.likes-count {
-  font-size: 1rem;
-  color: #333;
+.icon-button:active {
+  transform: scale(0.95);
+}
+
+/* Active blue icon */
+.blue-icon {
+  color: blue;
+}
+
+/* Counters for likes and comments */
+.likes-count,
+.comments-count {
+  margin-left: 4px;
+  font-weight: bold;
+}
+
+/* Action section for update and delete buttons */
+.action-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 20px;
+}
+
+/* Optional styling for action buttons */
+/* Action section for update and delete buttons */
+.action-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 20px;
+}
+
+/* Base styling for action buttons is inherited from .icon-button */
+
+/* Update button: subtle yellow */
+.action-button.update-button {
+  color: #ffb74d; /* Soft yellow */
+  border-color: #ffb74d;
+}
+
+/* Delete button: subtle red */
+.action-button.delete-button {
+  color: #e57373; /* Soft red */
+  border-color: #e57373;
+}
+
+/* Optionally, add a hover effect to intensify the color slightly */
+.action-button.update-button:hover {
+  background-color: #ffe082;
+}
+
+.action-button.delete-button:hover {
+  background-color: #ef9a9a;
 }
