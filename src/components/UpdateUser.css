@@ -3,95 +3,140 @@
   display: flex;
   flex-direction: row;
   width: 600px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  background-color: #fff;
+  background-color: #ffffff;
+  transition: transform 0.3s ease;
+}
+
+.update-user-card:hover {
+  transform: translateY(-5px);
 }
 
 .update-user-card .card-img {
-  width: 200px;
+  width: 220px;
   height: auto;
   object-fit: contain;
-  align-self: flex-start;
-  padding: 1rem;
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .update-user-card .card-content {
-  padding: 1rem;
+  padding: 1.5rem;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .update-user-card .card-info {
-  margin: 0.5rem 0;
+  margin-bottom: 1rem;
   font-size: 1.2rem;
-  color: #555;
+  color: #333;
+  font-weight: 500;
 }
 
 .update-user-card .btn-edit {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #007bff;
+  padding: 12px 40px;
+  background-color: #f0f0f0;
+  color: #333;
+  font-weight: 700;
+  font-size: 16px;
   border: none;
-  color: #fff;
+  border-radius: 35px;
   cursor: pointer;
-  border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .update-user-card .btn-edit:hover {
-  background-color: #0056b3;
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+/* Update Form Styles */
+.update-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .update-form .form-group {
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .update-form label {
-  display: block;
   margin-bottom: 0.5rem;
-  font-weight: bold;
+  font-weight: 600;
+  color: #333;
 }
 
 .update-form input[type="password"],
 .update-form input[type="file"] {
   width: 100%;
-  padding: 0.5rem;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
   box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
+.update-form input[type="password"]:focus,
+.update-form input[type="file"]:focus {
+  border-color: #e60023;
+  outline: none;
+}
+
+/* Form Actions (Buttons) */
 .form-actions {
   display: flex;
-  gap: 1rem;
+  gap: 20px;
+  justify-content: flex-end;
 }
 
-.btn-update {
-  padding: 0.5rem 1rem;
-  background-color: #28a745;
+.btn-update,
+.btn-cancel {
+  font-weight: 700;
+  font-size: 16px;
+  padding: 14px 40px;
+  border-radius: 35px;
   border: none;
-  color: #fff;
   cursor: pointer;
-  border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Update Button (Green) */
+.btn-update {
+  background-color: #28a745;
+  color: #ffffff;
 }
 
 .btn-update:hover {
   background-color: #218838;
+  transform: translateY(-2px);
 }
 
+/* Cancel Button (Red) */
 .btn-cancel {
-  padding: 0.5rem 1rem;
-  background-color: #dc3545;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 4px;
+  background-color: #e60023;
+  color: #ffffff;
 }
 
 .btn-cancel:hover {
-  background-color: #c82333;
+  background-color: #bf0811;
+  transform: translateY(-2px);
 }
 
+/* Message After Update */
 .update-message {
   margin-top: 1rem;
-  font-weight: bold;
+  font-weight: 600;
+  color: #28a745;
+  text-align: center;
 }

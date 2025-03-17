@@ -1,40 +1,64 @@
 import { FC, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-solid-svg-icons";
-import { useForm } from "react-hook-form";
-import axios from "axios";
-import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import "./Form.css"
+import { useNavigate } from "react-router-dom";
+import "./Form.css"; 
 
-interface FormDataType {
-  profilePicture: File[];
-  email: string;
-  userName: string;
-  password: string;
-  confirmPassword: string;
-}
+// Zod Validation
+const registerSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  userName: z.string().min(3, "Username must be at least 3 characters long"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+  confirmPassword: z.string().min(6, "Confirm Password is required"),
+  profilePicture: z.any().optional(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+type RegisterForm = z.infer<typeof registerSchema>;
 
 const RegistrationForm: FC = () => {
+  const navigate = useNavigate(); // Initialize navigate
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const { register, handleSubmit, watch } = useForm<FormDataType>();
-  const [profilePicture] = watch(["profilePicture"]);
+  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<RegisterForm>({
+    resolver: zodResolver(registerSchema),
+    mode: "onChange",
+  });
+
+  const profilePicture = watch("profilePicture") as unknown as File[];
   const inputFileRef: { current: HTMLInputElement | null } = { current: null };
 
+  // Effect to update preview when file changes
   useEffect(() => {
-    if (profilePicture) {
+    if (profilePicture && profilePicture.length > 0) {
       setSelectedFile(profilePicture[0]);
     }
   }, [profilePicture]);
 
-  const onSubmit = async (data: FormDataType) => {
+  // Submit function
+  const onSubmit = async (data: RegisterForm) => {
+    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("email", data.email);
       formData.append("userName", data.userName);
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);
-      if (data.profilePicture && data.profilePicture[0]) {
-        formData.append("profilePicture", data.profilePicture[0]);
+
+      if (profilePicture && profilePicture.length > 0) {
+        formData.append("profilePicture", profilePicture[0]);
       }
 
       const response = await axios.post(
@@ -43,98 +67,48 @@ const RegistrationForm: FC = () => {
       );
 
       console.log("Registration successful:", response.data);
-      alert("Registration successful!");
+
+      // Redirect to login after successful registration
+      navigate("/login");
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error("Registration error:", error);
       alert("Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Manually register file input (excluded from Zod)
   const { ref, ...rest } = register("profilePicture");
-  
-  const onGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
-    console.log("Google login successful:", credentialResponse);
-
-    try {
-        if (!credentialResponse.credential) {
-            throw new Error("No Google credential provided");
-        }
-
-        const response = await axios.post("http://localhost:3000/api/auth/google", {
-            credential: credentialResponse.credential, // Send credential to backend
-        });
-
-        console.log("Google login success:", response.data);
-        
-        // Store access token & refresh token
-        console.log("Current refreshToken before saving:", localStorage.getItem("refreshToken"));
-        localStorage.removeItem("refreshToken"); // Clear old refresh token
-        localStorage.setItem("refreshToken", response.data.refreshToken); // Save new refresh token
-        
-    } catch (error) {
-        console.error("Google login error:", error);
-    }
-};
-
-  const onGoogleLoginFailure = () => {
-      console.error("Google login failed");
-      };
 
   return (
-    <form
-      style={{
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-      onSubmit={handleSubmit(onSubmit)}
-      encType="multipart/form-data"
-    >
-      <div
-        className="d-flex flex-column"
-        style={{
-          width: "20%",
-          backgroundColor: "lightgray",
-          padding: "20px",
-          borderRadius: "10px",
-        }}
+    <div className="page-container">
+      <form
+        className="form-container"
+        onSubmit={handleSubmit(onSubmit)}
+        encType="multipart/form-data"
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            position: "relative",
-          }}
-        >
+        <h2 className="astroshare-heading">Welcome to AstroShare</h2>
+
+        {/* Profile Picture */}
+        <div className="profile-pic-wrapper">
           <img
             src={
               selectedFile
                 ? URL.createObjectURL(selectedFile)
-                : "http://localhost:3000/public/default_profile.png"
+                : "http://localhost:3000/public/default_profile.png" // Local public folder
             }
-            style={{
-              width: "200px",
-              height: "200px",
-              alignSelf: "center",
-              borderRadius: "50%",
-            }}
             alt="Profile"
+            className="profile-pic"
           />
           <FontAwesomeIcon
-            onClick={() => inputFileRef.current?.click()}
             icon={faImage}
-            className="fa-xl"
-            style={{
-              position: "absolute",
-              bottom: "0",
-              right: "0",
-              cursor: "pointer",
-            }}
+            className="upload-icon"
+            onClick={() => inputFileRef.current?.click()}
           />
         </div>
 
+        {/* Hidden file input */}
         <input
           {...rest}
           ref={(e) => {
@@ -146,49 +120,64 @@ const RegistrationForm: FC = () => {
           style={{ display: "none" }}
         />
 
-        <label>Email:</label>
-        <input {...register("email")} type="email" className="mb-3" required />
-
-        <label>User Name:</label>
-        <input
-          {...register("userName")}
-          type="text"
-          className="mb-3"
-          required
-        />
-
-        <label>Password:</label>
-        <input
-          {...register("password")}
-          type="password"
-          className="mb-3"
-          required
-        />
-
-        <label>Confirm Password:</label>
-        <input
-          {...register("confirmPassword")}
-          type="password"
-          className="mb-3"
-          required
-        />
-
-        <button type="submit" className="btn btn-outline-primary">
-          Register
-        </button>
-        <div className="google-login-wrapper">
-          <GoogleLogin
-            onSuccess={onGoogleLoginSuccess}
-            onError={onGoogleLoginFailure}
-            theme="outline"
-            size="large"
-            shape="rectangular"
-            width="100%"  // Ensures full width
+        {/* Email */}
+        <div className="form-group">
+          <label>Email</label>
+          <input
+            {...register("email")}
+            type="email"
+            placeholder="Enter your email"
+            className={errors.email ? "error" : ""}
           />
+          {errors.email && <p className="error-message">{errors.email.message}</p>}
         </div>
-      </div>
-    </form>
+
+        {/* Username */}
+        <div className="form-group">
+          <label>User Name</label>
+          <input
+            {...register("userName")}
+            type="text"
+            placeholder="Choose a username"
+            className={errors.userName ? "error" : ""}
+          />
+          {errors.userName && <p className="error-message">{errors.userName.message}</p>}
+        </div>
+
+        {/* Password */}
+        <div className="form-group">
+          <label>Password</label>
+          <input
+            {...register("password")}
+            type="password"
+            placeholder="Enter your password"
+            className={errors.password ? "error" : ""}
+          />
+          {errors.password && <p className="error-message">{errors.password.message}</p>}
+        </div>
+
+        {/* Confirm Password */}
+        <div className="form-group">
+          <label>Confirm Password</label>
+          <input
+            {...register("confirmPassword")}
+            type="password"
+            placeholder="Re-enter your password"
+            className={errors.confirmPassword ? "error" : ""}
+          />
+          {errors.confirmPassword && (
+            <p className="error-message">{errors.confirmPassword.message}</p>
+          )}
+        </div>
+
+        {/* Submit Button */}
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Sign up"}
+        </button>
+      </form>
+    </div>
   );
 };
 
 export default RegistrationForm;
+
