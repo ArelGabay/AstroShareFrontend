@@ -12,11 +12,11 @@ body {
   min-height: 100vh;
 }
 
-/* .app-container {
+.app-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-} */
+}
 
 /* Navbar */
 .navbar {
