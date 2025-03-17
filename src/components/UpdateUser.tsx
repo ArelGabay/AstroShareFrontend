@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useAuth } from "../context/useAuth";
 import "./UpdateUser.css";
 
 export interface IUser {
@@ -72,6 +73,8 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
     fetchUser();
   }, []);
 
+  const { refreshUserData } = useAuth();
+
   const onSubmit = async (data: UpdateFormData) => {
     setUpdateMessage("");
 
@@ -109,11 +112,16 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
       );
 
       setUser(response.data);
+      localStorage.setItem("profilePictureUrl", response.data.profilePictureUrl);
       setUpdateMessage("Profile updated successfully");
       setEditing(false);
       reset();
       setSelectedFile(null);
       onUpdate(response.data);
+
+      // Added
+      await refreshUserData();
+      
     } catch (err) {
       console.error("Error updating user info:", err);
       setUpdateMessage("Failed to update profile");
@@ -137,7 +145,14 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
         <p className="card-info">Email: {user?.email}</p>
         {!editing && (
           <button onClick={() => setEditing(true)} className="btn-edit">
+          {!user?.googleId && !editing && (
+          <button onClick={() => setEditing(true)} className="btn-edit">
             Edit Profile
+          </button>
+          )}
+        {user?.googleId && (
+          <p className="info-message">Google users cannot edit profile here.</p>
+)}
           </button>
         )}
         {editing && (

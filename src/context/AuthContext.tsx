@@ -1,28 +1,73 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import axios from "axios";
 
+interface UserType {
+  userName: string;
+  profilePictureUrl?: string;
+  isGoogleUser?: boolean; // Added
+}
+
 interface AuthContextType {
-  user: string | null;
-  login: (name: string) => void;
+  user: UserType | null;
+  login: (userData: UserType) => void;
   logout: () => void;
+  refreshUserData: () => Promise<void>; // Added
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
+  const refreshUserData = async () => {
+    const storedUsername = localStorage.getItem("userName"); 
+    if (!storedUsername) return;
 
-  useEffect(() => {
-    const storedName = localStorage.getItem("userName");
-    if (storedName) {
-        setUser(storedName);
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(`http://localhost:3000/api/users/${storedUsername}`, {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      });
+      
+      const userData = response.data[0]; 
+
+      const fullProfilePictureUrl = userData.profilePictureUrl
+      ? userData.profilePictureUrl.startsWith("http")
+        ? userData.profilePictureUrl
+        : `http://localhost:3000/public/${userData.profilePictureUrl}`
+      : "";
+
+      const isGoogleUser = !!userData.googleId; // true if googleId exists
+
+      setUser({
+          userName: userData.userName,
+          profilePictureUrl: fullProfilePictureUrl,
+          isGoogleUser,
+        });
+
+      localStorage.setItem("profilePictureUrl", fullProfilePictureUrl);
+    } catch (err) {
+      console.error("Failed to refresh user data", err);
     }
-}, [user]); // Depend on `user`, so UI updates immediately
-
-  const login = (name: string) => {
-    localStorage.setItem("userName", name);
-    setUser(name);
   };
+
+  const login = (userData: UserType) => {
+    const fullProfilePictureUrl = userData.profilePictureUrl
+      ? userData.profilePictureUrl.startsWith("http")
+        ? userData.profilePictureUrl
+        : `http://localhost:3000/public/${userData.profilePictureUrl}`
+      : "";
+  
+    localStorage.setItem("userName", userData.userName);
+    localStorage.setItem("profilePictureUrl", fullProfilePictureUrl);
+  
+    setUser({
+      userName: userData.userName,
+      profilePictureUrl: fullProfilePictureUrl,
+      isGoogleUser: userData.isGoogleUser || false, // default to false if not provided
+    });
+  };  
 
   const logout = async () => {
     try {
@@ -55,8 +100,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  useEffect(() => {
+    refreshUserData();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    // Added
+    <AuthContext.Provider value={{ user, login, logout, refreshUserData }}> 
       {children}
     </AuthContext.Provider>
   );

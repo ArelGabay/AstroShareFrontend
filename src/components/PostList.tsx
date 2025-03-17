@@ -53,7 +53,6 @@ const PostList: FC<PostListProps> = ({
 
   return (
     <div>
-      <h1>Post List</h1>
       {/* Flex container to line posts horizontally */}
       <div
         style={{

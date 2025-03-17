@@ -1,69 +1,160 @@
-/* Navigation Bar */
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #ffffff; /* Pure white background */
+  color: #333;
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Navbar */
 .navbar {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: white;
-  padding: 10px 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: none;
+  padding: 20px 40px;
+  box-shadow: none;
 }
 
-/* Buttons Container */
-.nav-buttons {
+.astroshare-logo {
   display: flex;
-  gap: 10px;
-}
-
-/* Unified Auth Buttons (Login, Profile, Logout) */
-.auth-button {
-  background-color: #007bff; /* Same as Login button */
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: bold;
+  align-items: center;
+  gap: 12px;
   cursor: pointer;
-  transition: background 0.3s ease;
-  min-width: 100px; /* Ensures buttons are wide enough */
-  text-align: center;
-  white-space: nowrap; /* Prevents text from breaking */
 }
 
-.auth-button:hover {
-  background-color: #0056b3;
+.astroshare-logo svg {
+  height: 40px;
+  width: 40px;
+  color: #e60023;
 }
 
-/* Smaller Sign Up Button */
+.astroshare-logo span {
+  font-size: 32px;
+  font-weight: 900;
+  color: #e60023;
+}
+
+/* Buttons */
+.button-group {
+  display: flex;
+  gap: 20px;
+}
+
+.login-button,
+.signup-button,
+.logout-button,
+.edit-profile-button {
+  font-weight: 700;
+  font-size: 18px;
+  padding: 16px 40px;
+  border-radius: 35px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-button,
+.logout-button {
+  background-color: #e60023;
+  color: #ffffff;
+}
+
+.login-button:hover,
+.logout-button:hover {
+  background-color: #bf0811;
+}
+
 .signup-button {
-  background-color: #007bff; /* Same blue color */
-  color: white;
-  border: none;
-  padding: 6px 12px; /* Balanced padding */
-  border-radius: 6px;
-  font-size: 14px; /* Slightly smaller font */
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  min-width: 100px; /* Ensures text fits */
-  text-align: center;
-  white-space: nowrap; /* Prevents text from breaking */
+  background-color: #f0f0f0;
+  color: #333;
 }
 
 .signup-button:hover {
-  background-color: #0056b3;
+  background-color: #e0e0e0;
 }
 
-/* Right-Side Logo */
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-  color: #e60023;
-  margin-left: auto;
+/* Edit Profile Button */
+.edit-profile-button {
+  background-color: #f0f0f0;
+  color: #333;
 }
 
-/* Post Container */
-.post-container {
-  text-align: center;
-  margin-top: 20px;
+.edit-profile-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Profile Section */
+.profile-section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 15px 20px;
+  background: none;
+}
+
+.profile-picture {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+}
+
+.user-name {
+  margin-left: 15px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Page Container */
+.page-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .button-group {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+
+  .profile-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-name {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .login-button,
+  .signup-button,
+  .logout-button {
+    width: 100%;
+    justify-content: center;
+  }
 }

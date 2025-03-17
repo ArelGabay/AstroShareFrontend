@@ -1,66 +1,41 @@
-/* Center the form container */
+/* Reset defaults */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f6f8;
+  color: #333;
+  min-height: 100vh;
+}
+
+/* ------------------------------------------- */
+/* Page container for centering login/register */
+.page-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f6f8;
+}
+
+/* ------------------------------------------- */
+/* Shared Form container */
 .form-container {
-  width: 350px;
-  margin: auto;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
+  width: 400px;
   background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   text-align: center;
+  position: relative;
 }
 
-/* Form labels */
-label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 5px;
-  text-align: left;
-}
-
-/* Input fields */
-input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  margin-bottom: 5px;
-}
-
-/* Highlight input field if there's an error */
-input.error {
-  border-color: red;
-}
-
-/* Error message styling */
-.error-message {
-  color: red;
-  font-size: 12px;
-  text-align: left;
-  margin-top: -5px;
-  margin-bottom: 10px;
-}
-
-/* Submit button */
-button {
-  width: 100%;
-  padding: 10px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
-}
-
+/* ------------------------------------------- */
 /* Back Arrow Button */
 .back-arrow-button {
   background-color: white;
@@ -71,58 +46,226 @@ button:hover {
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
   position: absolute;
-  left: 15px;
-  top: 15px;
+  top: -20px;
+  left: -20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .back-arrow-button:hover {
-  background-color: #f2f2f2;
+  background-color: #f1f1f1;
   transform: scale(1.1);
 }
 
-/* Arrow Icon */
 .arrow-icon {
-  color: black;
+  color: #333;
   font-size: 20px;
 }
 
-/* Google Login Button Styling */
-.google-login-container {
-  width: 100%; /* Match Login button width */
-  display: flex;
-  justify-content: center; /* Center it */
-  margin-top: 10px; /* Adjust spacing */
+/* ------------------------------------------- */
+/* Form Title */
+h2 {
+  margin-bottom: 30px;
+  font-size: 24px;
+  color: #333;
 }
 
-.google-login-container > div {
-  width: 100% !important; /* Force full width */
-  max-width: 100% !important;
+/* ------------------------------------------- */
+/* Form group */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
 }
 
-.google-login-container iframe {
-  width: 100% !important; /* Force full width */
-  height: 50px !important; /* Same height as Login */
+.form-group label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+  color: #555;
 }
 
-.google-login-container button {
-  width: 100% !important; /* Match Login button */
-  height: 50px !important; /* Same height as Login */
-  font-size: 18px !important; /* Match text size */
-  font-weight: bold !important;
-  border-radius: 4px !important;
-  background: #007bff !important; /* Same blue as Login */
-  color: white !important; /* White text */
-  border: none !important;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+/* ------------------------------------------- */
+/* Input fields */
+input {
+  width: 100%;
+  padding: 14px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fafafa;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+input.error {
+  border-color: red;
+}
+
+/* Error message styling */
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* ------------------------------------------- */
+/* Buttons: Login/Register */
+button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  background: #e60023; /* Pinterest red */
+  color: #ffffff;
+  font-size: 16px;
+  border-radius: 25px;
+  border: none;
   cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.google-login-container button:hover {
-  background: #0056b3 !important; /* Hover effect */
+button[type="submit"]:hover {
+  background: #bf0811;
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------- */
+/* Profile Picture (Register) */
+.profile-pic-wrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 20px;
+}
+
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+}
+
+.upload-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #ffffff;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* ------------------------------------------- */
+/* Google Login Wrapper (Both pages) */
+.google-login-wrapper {
+  margin-top: 20px;
+}
+
+.custom-google-button button {
+  width: 100% !important;
+  height: 50px !important;
+  background-color: #db4437 !important; /* Google Red */
+  color: white !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  border-radius: 25px !important;
+  border: none !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-google-button button:hover {
+  background-color: #c33d2e !important;
+}
+
+.custom-google-button button::before {
+  content: "";
+  background: url("https://developers.google.com/identity/images/g-logo.png") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+/* ------------------------------------------- */
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .form-container {
+    width: 90%;
+    padding: 30px 20px;
+  }
+
+  .profile-pic-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-pic {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  color: #555;
+}
+
+.astroshare-heading {
+  font-size: 28px;
+  font-weight: 700;
+  color: #e60023; /* Pinterest red */
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* spacing between logo and text */
+}
+
+.astroshare-heading svg {
+  height: 28px;
+  width: 28px;
+}
+
+/* Welcome Heading */
+.astroshare-welcome {
+  font-size: 28px;
+  color: #e60023; /* AstroShare Red */
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* Login Heading */
+.login-heading {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 30px;
 }
