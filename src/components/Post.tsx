@@ -1,26 +1,38 @@
 import { FC, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  LikeOutlined,
+  LikeFilled,
+  CommentOutlined,
+  PictureOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
+import UpdatePostModal from "./UpdatePostModal"; // Our custom update modal component
 import "./Post.css";
 
-interface PostProps {
-  post: {
-    _id: string; // Or _id if that's your field
-    title: string;
-    content: string;
-    sender: string; // username of the user who created the post
-    pictureUrl?: string;
-    likes?: string[];
-  };
+interface PostData {
+  _id: string;
+  title: string;
+  content: string;
+  sender: string;
+  pictureUrl?: string;
+  likes?: string[];
 }
 
-const Post: FC<PostProps> = ({ post }) => {
-  // Assume the current user's username and token are stored in localStorage.
+interface PostProps {
+  post: PostData;
+  onDelete?: (id: string) => void;
+}
+
+const Post: FC<PostProps> = ({ post, onDelete }) => {
   const currentUser = localStorage.getItem("username") || "Anonymous";
   const token = localStorage.getItem("accessToken") || "";
+  const navigate = useNavigate();
 
-  console.log("Current user:", currentUser);
+  const hasPicture = Boolean(post.pictureUrl);
 
-  // Initialize local state from the post's likes only once.
   const [liked, setLiked] = useState<boolean>(
     post.likes ? post.likes.includes(currentUser) : false
   );
@@ -28,32 +40,115 @@ const Post: FC<PostProps> = ({ post }) => {
     post.likes ? post.likes.length : 0
   );
   const [senderName, setSenderName] = useState<string>(post.sender);
+  const [commentCount, setCommentCount] = useState<number>(0);
+  const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     setSenderName(post.sender);
   }, [post.sender]);
 
+  // Fetch comments count for this post
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/comments/post/${post._id}`
+        );
+        setCommentCount(response.data.length);
+      } catch (error) {
+        console.error("Error fetching comments count:", error);
+      }
+    };
+    fetchComments();
+  }, [post._id]);
+
   const handleLike = async () => {
-    console.log(
-      "Toggle like clicked for post:",
-      post._id,
-      "by user:",
-      currentUser
-    );
     try {
       const endpoint = `http://localhost:3000/api/posts/like/${post._id}`;
-      console.log("Sending request to:", endpoint);
       const response = await axios.post(
         endpoint,
         { username: currentUser },
         { headers: { Authorization: `JWT ${token}` } }
       );
-      console.log("Response from server:", response.data);
-      // Update state based on the updated post returned by the server.
       setLikeCount(response.data.likes.length);
       setLiked(response.data.likes.includes(currentUser));
     } catch (error) {
       console.error("Error toggling like:", error);
+    }
+  };
+
+  const handleCommentsClick = () => {
+    navigate(`/comments/${post._id}`);
+  };
+
+  // Open update modal popup
+  const handleUpdateClick = () => {
+    setUpdateModalVisible(true);
+  };
+
+  // Updated handleUpdatePost function that only sends title, content and photo.
+  const handleUpdatePost = async (updatedData: {
+    title: string;
+    content: string;
+    photo?: File | null;
+    deletePhoto?: boolean;
+  }) => {
+    console.log("Updating post:", post._id, updatedData);
+    const formData = new FormData();
+    formData.append("title", updatedData.title);
+    formData.append("content", updatedData.content);
+    formData.append("pictureUrl", post.pictureUrl || "");
+    // Note: We don't update sender or likes here.
+
+    if (updatedData.photo) {
+      // If a new photo was selected, append it
+      formData.append("photo", updatedData.photo);
+      if (post.pictureUrl) {
+        formData.append("oldPictureUrl", post.pictureUrl);
+      }
+    }
+
+    if (updatedData.deletePhoto) {
+      formData.append("deletePhoto", "true");
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/posts/${post._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `JWT ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Post updated:", response.data);
+      setUpdateModalVisible(false);
+      // Optionally update your UI based on response.data
+    } catch (error) {
+      console.error("Error updating post:", error);
+    }
+  };
+
+  const handleCancelUpdate = () => {
+    setUpdateModalVisible(false);
+  };
+
+  // Delete functionality remains unchanged
+  const handleDelete = async () => {
+    try {
+      console.log("Delete post:", post._id);
+      const endpoint = `http://localhost:3000/api/posts/${post._id}`;
+      const response = await axios.delete(endpoint, {
+        headers: { Authorization: `JWT ${token}` },
+      });
+      console.log("Post deleted:", response.data);
+      if (onDelete) {
+        onDelete(post._id);
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
     }
   };
 
@@ -68,25 +163,67 @@ const Post: FC<PostProps> = ({ post }) => {
 
       <div className="post-body">
         <p className="post-content">{post.content}</p>
-        {post.pictureUrl && (
-          <div className="post-picture-container">
+        <div className="post-picture-container">
+          {hasPicture ? (
             <img
-              src={post.pictureUrl}
+              src={"http://localhost:3000/public/" + post.pictureUrl}
               alt="Post visual"
               className="post-image"
             />
-          </div>
-        )}
+          ) : (
+            <div className="no-picture">
+              <PictureOutlined className="no-picture-icon" />
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="post-footer">
-        <button onClick={handleLike} className="like-button">
-          {liked ? "Unlike" : "Like"}
-        </button>
-        <span className="likes-count">
-          {likeCount} {likeCount === 1 ? "like" : "likes"}
-        </span>
+      <div className="post-footer-wrapper">
+        <div className="post-footer">
+          <div className="like-section">
+            <span
+              onClick={handleLike}
+              className={`icon-button like-icon ${liked ? "blue-icon" : ""}`}
+            >
+              {liked ? <LikeFilled /> : <LikeOutlined />}
+            </span>
+            <span className="likes-count">{likeCount}</span>
+          </div>
+          <div className="comment-section">
+            <span
+              onClick={handleCommentsClick}
+              className="icon-button comments-icon blue-icon"
+            >
+              <CommentOutlined />
+            </span>
+            <span className="comments-count">{commentCount}</span>
+          </div>
+          {post.sender === currentUser && (
+            <div className="action-section">
+              <span
+                onClick={handleUpdateClick}
+                className="icon-button action-button update-button"
+              >
+                <EditOutlined />
+              </span>
+              <span
+                onClick={handleDelete}
+                className="icon-button action-button delete-button"
+              >
+                <DeleteOutlined />
+              </span>
+            </div>
+          )}
+        </div>
       </div>
+      {updateModalVisible && (
+        <UpdatePostModal
+          visible={updateModalVisible}
+          post={post}
+          onUpdate={handleUpdatePost}
+          onCancel={handleCancelUpdate}
+        />
+      )}
     </div>
   );
 };

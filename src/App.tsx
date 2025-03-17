@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import PostList from "./components/PostList";
+import CommentsPage from "./pages/CommentsPage.tsx";
 import { MdOutlineTravelExplore } from "react-icons/md"; // explore icon
 import "./App.css";
 
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/comments/:postId" element={<CommentsPage />} />
         </Routes>
       </div>
     </div>
