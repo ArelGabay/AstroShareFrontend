@@ -1,0 +1,101 @@
+.comment-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border: 1px solid #ddd;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.comment-main {
+  flex: 1;
+  margin-right: 8px;
+}
+
+.comment-sender {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.comment-content {
+  margin: 0;
+}
+
+.comment-edit-textarea {
+  width: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+/* Action buttons container aligned to the right */
+.comment-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Base styling for action buttons (kept consistent with post action buttons) */
+/* Base styling for action buttons (used by both update and delete) */
+.action-button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease;
+  background-color: #fff;
+}
+
+/* Update button: white background, yellow border and icon */
+.action-button.edit-btn {
+  border-color: #ffb74d; /* soft yellow */
+  color: #ffb74d;
+}
+
+.action-button.edit-btn:hover {
+  background-color: #ffb74d;
+  color: #fff;
+}
+
+/* Delete button: white background, red border and icon */
+.action-button.delete-btn {
+  border-color: #e57373; /* soft red */
+  color: #e57373;
+}
+
+.action-button.delete-btn:hover {
+  background-color: #e57373;
+  color: #fff;
+}
+
+/* Editing mode buttons */
+/* Save button: green background with white icon */
+.action-button.save-btn {
+  background-color: #4caf50;
+  color: #fff;
+  border: 1px solid #4caf50;
+}
+
+.action-button.save-btn:hover {
+  background-color: #43a047;
+}
+
+/* Cancel button: red background with white icon */
+.action-button.cancel-btn {
+  background-color: #f44336;
+  color: #fff;
+  border: 1px solid #f44336;
+}
+
+.action-button.cancel-btn:hover {
+  background-color: #e53935;
+}
