@@ -27,7 +27,7 @@ const PostList: FC<PostListProps> = ({
   const [posts, setPosts] = useState<PostType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
-  const postsPerPage = 4; // Adjust as needed
+  const postsPerPage = 3; // Adjust as needed
 
   useEffect(() => {
     const fetchPosts = async () => {

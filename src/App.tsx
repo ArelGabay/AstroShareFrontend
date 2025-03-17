@@ -23,15 +23,27 @@ export default function App() {
         <div className="button-group">
           {!user ? (
             <>
-              <button className="login-button" onClick={() => navigate("/login")}>
+              <button
+                className="login-button"
+                onClick={() => navigate("/login")}
+              >
                 Log in
               </button>
-              <button className="signup-button" onClick={() => navigate("/register")}>
+              <button
+                className="signup-button"
+                onClick={() => navigate("/register")}
+              >
                 Sign up
               </button>
             </>
           ) : (
-            <button className="logout-button" onClick={logout}>
+            <button
+              className="logout-button"
+              onClick={() => {
+                navigate("/");
+                logout();
+              }}
+            >
               Logout
             </button>
           )}
@@ -54,7 +66,14 @@ export default function App() {
 
       <div className="page-container">
         <Routes>
-          <Route path="/" element={<div className="post-container"><PostList /></div>} />
+          <Route
+            path="/"
+            element={
+              <div className="post-container">
+                <PostList />
+              </div>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />

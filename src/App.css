@@ -6,17 +6,17 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   background-color: #ffffff; /* Pure white background */
   color: #333;
   min-height: 100vh;
 }
 
-.app-container {
+/* .app-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
+} */
 
 /* Navbar */
 .navbar {
@@ -121,12 +121,12 @@ body {
   font-weight: 600;
 }
 
-/* Page Container */
+/* Page Container
 .page-container {
   width: 100%;
   max-width: 1200px;
   padding: 20px;
-}
+} */
 
 /* Responsive */
 @media (max-width: 768px) {
