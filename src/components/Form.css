@@ -14,7 +14,7 @@ body {
 
 /* ------------------------------------------- */
 /* Page container for centering login/register */
-.page-container {
+.auth-page-container {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -119,7 +119,7 @@ input.error {
 
 /* ------------------------------------------- */
 /* Buttons: Login/Register */
-button[type="submit"] {
+.form-container button[type="submit"] {
   width: 100%;
   padding: 14px;
   background: #e60023;
@@ -132,7 +132,7 @@ button[type="submit"] {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button[type="submit"]:hover {
+.form-container button[type="submit"]:hover {
   background: #bf0811;
   transform: translateY(-2px);
 }

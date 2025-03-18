@@ -1,43 +1,25 @@
-// ProfilePage.tsx
 import React from "react";
-import UpdateUser, { IUser } from "../components/UpdateUser"; // Adjust path if necessary
-import PostList from "../components/PostList";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import UpdateUser, { IUser } from "../components/UpdateUser";
+import UpdateGoogleUser from "../components/UpdateGoogleUser";
 import { useAuth } from "../context/useAuth";
 import "./Profile.css";
 
 const ProfilePage: React.FC = () => {
-  const { login, user } = useAuth(); // Use the user state from the AuthContext
+  const { refreshUserData, user } = useAuth();  // "user" is now used
 
-  // Callback to update the user state when UpdateUser component updates it.
-  const handleUserUpdate = (updatedUser: IUser) => {
-    login({
-      userName: updatedUser.userName,
-      profilePictureUrl: updatedUser.profilePictureUrl,
-      isGoogleUser: user?.isGoogleUser || false, // Preserve the flag!
-    });
+  const handleUserUpdate = async () => {
+    await refreshUserData();
   };
+
+  if (!user) return <p>Loading user...</p>;
 
   return (
     <div className="profile-page">
-
-      {/* If NOT a Google user, show edit profile */}
-      {!user?.isGoogleUser && (
-        <UpdateUser onUpdate={handleUserUpdate} />
-      )}
-
-      {/* If Google user, show message */}
-      {user?.isGoogleUser && (
-        <p className="info-message">Signed in with Google - Profile cannot be edited.</p>
-      )}
-
-      {/* Posts */}
-      {user ? (
-        <PostList filterByUser={true} userName={user.userName} />
+      {user.isGoogleUser ? (
+        <UpdateGoogleUser onUpdate={handleUserUpdate} />
       ) : (
-        <PostList
-          filterByUser={true}
-          userName={localStorage.getItem("username") || ""}
-        />
+        <UpdateUser onUpdate={handleUserUpdate} />
       )}
     </div>
   );

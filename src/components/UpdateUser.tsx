@@ -9,13 +9,14 @@ export interface IUser {
   _id?: string;
   userName: string;
   email: string;
-  password: string;
+  password?: string;
   googleId?: string;
   profilePictureUrl?: string;
   refreshTokens?: string[];
 }
 
 interface UpdateFormData {
+  userName: string;
   newPassword: string;
   confirmPassword: string;
   profilePicture: FileList;
@@ -51,7 +52,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const storedUsername = localStorage.getItem("username");
+        const storedUsername = localStorage.getItem("userName");
         if (!storedUsername) {
           setError("No username found in local storage");
           setLoading(false);
@@ -75,32 +76,27 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
 
   const { refreshUserData } = useAuth();
 
-  const onSubmit = async (data: UpdateFormData) => {
+  const onSubmit = async (data: UpdateFormData & { userName: string }) => {
     setUpdateMessage("");
-
-    if (data.newPassword && data.newPassword !== data.confirmPassword) {
-      setUpdateMessage("Passwords do not match");
-      return;
-    }
-
+  
     if (!user || !user._id) {
       setUpdateMessage("User data is not loaded");
       return;
     }
-
+  
     try {
       const formData = new FormData();
-      if (data.newPassword) {
-        formData.append("password", data.newPassword);
-      }
+      formData.append("userName", data.userName);
+  
       if (data.profilePicture && data.profilePicture.length > 0) {
         formData.append("profilePicture", data.profilePicture[0]);
         if (user.profilePictureUrl) {
           formData.append("oldProfilePictureUrl", user.profilePictureUrl);
         }
       }
-
+  
       const token = localStorage.getItem("accessToken");
+  
       const response = await axios.put(
         `http://localhost:3000/api/users/${user.userName}`,
         formData,
@@ -110,23 +106,24 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
           },
         }
       );
-
+  
       setUser(response.data);
-      localStorage.setItem("profilePictureUrl", response.data.profilePictureUrl);
+  
       setUpdateMessage("Profile updated successfully");
       setEditing(false);
       reset();
       setSelectedFile(null);
       onUpdate(response.data);
-
-      // Added
-      await refreshUserData();
       
+      localStorage.setItem("profilePictureUrl", response.data.profilePictureUrl);
+      localStorage.setItem("userName", response.data.userName);
+      await refreshUserData();
     } catch (err) {
       console.error("Error updating user info:", err);
       setUpdateMessage("Failed to update profile");
     }
   };
+  
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -136,86 +133,76 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
       {user?.profilePictureUrl && (
         <img
           className="card-img"
-          src={"http://localhost:3000/public/" + user.profilePictureUrl}
+          src={
+            user?.profilePictureUrl.startsWith("http")
+            ? user?.profilePictureUrl 
+            : `http://localhost:3000/public/${user?.profilePictureUrl}` 
+          }
           alt="Profile"
-        />
+        />  
       )}
       <div className="card-content">
         <p className="card-info">Username: {user?.userName}</p>
         <p className="card-info">Email: {user?.email}</p>
-        {!editing && (
-          <button onClick={() => setEditing(true)} className="btn-edit">
-          {!user?.googleId && !editing && (
+          {!editing && (
           <button onClick={() => setEditing(true)} className="btn-edit">
             Edit Profile
           </button>
           )}
-        {user?.googleId && (
-          <p className="info-message">Google users cannot edit profile here.</p>
-)}
-          </button>
-        )}
         {editing && (
           <form onSubmit={handleSubmit(onSubmit)} className="update-form">
-            <div className="form-group">
-              <label htmlFor="newPassword">New Password</label>
-              <input
-                type="password"
-                id="newPassword"
-                placeholder="Enter new password"
-                {...register("newPassword")}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                placeholder="Confirm new password"
-                {...register("confirmPassword")}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="profilePicture">Profile Picture</label>
-              <input
-                type="file"
-                id="profilePicture"
-                accept="image/*"
-                {...profilePictureRest}
-                ref={(e) => {
-                  profilePictureRef(e);
-                }}
-              />
-            </div>
-            {selectedFile && (
-              <img
-                src={URL.createObjectURL(selectedFile)}
-                alt="Selected profile"
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  borderRadius: "50%",
-                  marginBottom: "1rem",
-                }}
-              />
-            )}
-            <div className="form-actions">
-              <button type="submit" className="btn-update">
-                Update Profile
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setEditing(false);
-                  reset();
-                  setSelectedFile(null);
-                }}
-                className="btn-cancel"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
+          <div className="form-group">
+            <label htmlFor="userName">Username</label>
+            <input
+              type="text"
+              id="userName"
+              defaultValue={user?.userName}
+              {...register("userName")}
+              required
+            />
+          </div>
+        
+          <div className="form-group">
+            <label htmlFor="profilePicture">Profile Picture</label>
+            <input
+              type="file"
+              id="profilePicture"
+              accept="image/*"
+              {...profilePictureRest}
+              ref={(e) => profilePictureRef(e)}
+            />
+          </div>
+        
+          {selectedFile && (
+            <img
+              src={URL.createObjectURL(selectedFile)}
+              alt="Selected profile"
+              style={{
+                width: "100px",
+                height: "100px",
+                borderRadius: "50%",
+                marginBottom: "1rem",
+              }}
+            />
+          )}
+        
+          <div className="form-actions">
+            <button type="submit" className="btn-update">
+              Update Profile
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEditing(false);
+                reset();
+                setSelectedFile(null);
+              }}
+              className="btn-cancel"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>        
         )}
         {updateMessage && <p className="update-message">{updateMessage}</p>}
       </div>
