@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { CheckOutlined, CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import Comment from "./Comment";
+import { useAuth } from "../context/useAuth"; // Import your auth hook
 import "./CommentsList.css";
 
 interface IComment {
@@ -14,7 +15,8 @@ interface IComment {
 
 const CommentsList: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
-  const currentUser = localStorage.getItem("username") || "Anonymous";
+  const { user } = useAuth(); // Get logged-in user
+  const currentUser = user ? user.userName : "Anonymous";
   const [comments, setComments] = useState<IComment[]>([]);
   const [addingComment, setAddingComment] = useState<boolean>(false);
   const [newComment, setNewComment] = useState<string>("");
@@ -131,10 +133,11 @@ const CommentsList: React.FC = () => {
           </button>
         </form>
       )}
-      {/* Floating add comment button at bottom right */}
+      {/* Floating add comment button */}
       <button
         className="add-comment-button"
         onClick={() => setAddingComment(true)}
+        disabled={!user} // Disable if no user is logged in
       >
         <PlusOutlined style={{ fontSize: "24px", color: "#fff" }} />
       </button>

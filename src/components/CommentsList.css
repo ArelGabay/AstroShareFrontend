@@ -1,10 +1,8 @@
 .comments-list-container {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  height: calc(
-    100vh - 80px
-  ); /* Adjust the 150px based on your navbar and inline form height */
+  width: 90%;              /* Increase the container width */
+  max-width: none;         /* Remove the fixed 800px limit (or set to a higher value, e.g., 1200px, if you prefer) */
+  margin: 0 auto;          /* Center the container */
+  height: calc(100vh - 300px);/* Adjust the height based on your navbar height */
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -14,12 +12,12 @@
 .comments-list {
   flex: 1;
   overflow-y: auto;
-  /* Removed border and border-radius for a frameless look, you can add these if desired */
   padding: 10px;
   border: 4px solid #f9f9f9;
   background-color: #fff;
 }
 
+/* Existing styles for forms and buttons remain unchanged */
 .add-comment-form-inline {
   display: flex;
   align-items: center;
@@ -66,7 +64,6 @@
   background-color: #e53935;
 }
 
-/* Floating add comment button in bottom right */
 .add-comment-button {
   position: fixed;
   bottom: 20px;
@@ -86,4 +83,11 @@
 
 .add-comment-button:hover {
   background-color: #45a049;
+}
+
+/* Disabled state styling */
+.add-comment-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
 }

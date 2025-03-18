@@ -1,7 +1,7 @@
 .comments-page {
   position: relative;
   padding: 20px;
-  min-height: calc(100vh - 80px); /* Adjust based on your navbar height */
+  height: calc(100vh - 80px); /* Use height instead of min-height */
   box-sizing: border-box;
 }
 
@@ -25,4 +25,12 @@
 
 .back-button:hover {
   background-color: #c0c0c0; /* Slightly darker grey on hover */
+}
+
+.comment-page-container {
+  display: block !important;
+  align-self: stretch !important; /* Forces this container to use the full available width */
+  width: 100% !important;
+  padding: 20px; /* Add any additional padding if needed */
+  box-sizing: border-box;
 }

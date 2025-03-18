@@ -4,15 +4,16 @@ import Pagination from "./Pagination";
 import axios from "axios";
 import { PlusOutlined } from "@ant-design/icons";
 import AddPostModal from "./AddPostModal";
-import "./PostList.css"; // Optional: additional styling for the floating button
+import { useAuth } from "../context/useAuth";
+import "./PostList.css";
 
 interface PostType {
   _id: string;
   title: string;
   content: string;
   sender: string;
-  pictureUrl: string;
-  likes: string[];
+  pictureUrl?: string;
+  likes?: string[];
 }
 
 interface PostListProps {
@@ -24,10 +25,11 @@ const PostList: FC<PostListProps> = ({
   filterByUser = false,
   userName = "",
 }) => {
+  const { user } = useAuth();
   const [posts, setPosts] = useState<PostType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
-  const postsPerPage = 3; // Adjust as needed
+  const postsPerPage = 3;
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -51,6 +53,15 @@ const PostList: FC<PostListProps> = ({
     setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
   };
 
+  // Update a post in the state
+  const handlePostUpdate = (updatedPost: PostType) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post._id === updatedPost._id ? updatedPost : post
+      )
+    );
+  };
+
   // Add a new post to state
   const handleAddPost = async (newData: {
     title: string;
@@ -61,23 +72,14 @@ const PostList: FC<PostListProps> = ({
       const formData = new FormData();
       formData.append("title", newData.title);
       formData.append("content", newData.content);
-      // Assume the current user is the sender
       formData.append(
         "sender",
-        localStorage.getItem("username") || "Anonymous"
+        localStorage.getItem("userName") || "Anonymous"
       );
       if (newData.photo) {
         formData.append("photo", newData.photo);
       }
       const token = localStorage.getItem("accessToken") || "";
-      console.log(
-        "formData",
-        formData.get("title"),
-        formData.get("content"),
-        formData.get("sender"),
-        formData.get("photo"),
-        token
-      );
       const response = await axios.post(
         `http://localhost:3000/api/posts`,
         formData,
@@ -87,7 +89,6 @@ const PostList: FC<PostListProps> = ({
           },
         }
       );
-      // Prepend the new post to the list (or refetch posts)
       setPosts((prev) => [response.data, ...prev]);
       setAddModalVisible(false);
     } catch (error) {
@@ -115,7 +116,12 @@ const PostList: FC<PostListProps> = ({
         }}
       >
         {currentPosts.map((post) => (
-          <Post key={post._id} post={post} onDelete={handlePostDelete} />
+          <Post
+            key={post._id}
+            post={post}
+            onDelete={handlePostDelete}
+            onUpdate={handlePostUpdate} // Pass the update callback
+          />
         ))}
       </div>
       <Pagination
@@ -124,10 +130,10 @@ const PostList: FC<PostListProps> = ({
         currentPage={currentPage}
         paginate={paginate}
       />
-      {/* Floating + button */}
       <button
         className="add-post-button"
         onClick={() => setAddModalVisible(true)}
+        disabled={!user}
       >
         <PlusOutlined style={{ fontSize: "24px", color: "#fff" }} />
       </button>

@@ -10,11 +10,13 @@ export interface IUser {
   email: string;
   googleId?: string;
   profilePictureUrl?: string;
+  bio?: string;
 }
 
 interface UpdateFormData {
   userName: string;
   profilePicture: FileList;
+  bio: string;
 }
 
 interface UpdateUserProps {
@@ -95,10 +97,6 @@ const UpdateGoogleUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
 
       localStorage.setItem("userName", response.data.userName);
       localStorage.setItem("profilePictureUrl", fullProfilePictureUrl);
-
-      //localStorage.setItem("userName", response.data.userName);
-      //localStorage.setItem("profilePictureUrl", response.data.profilePictureUrl);
-      //console.log("API Response after update:", response.data);
       
       setUser(response.data);
       setUpdateMessage("Google Profile updated successfully");
@@ -108,8 +106,6 @@ const UpdateGoogleUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
       onUpdate({...response.data,
         profilePictureUrl: fullProfilePictureUrl,
       });
-
-      //onUpdate(response.data);
 
       await refreshUserData();
     } catch (err) {
@@ -135,9 +131,11 @@ const UpdateGoogleUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
       )}
 
       <div className="card-content">
-        <p className="card-info">Username: {user?.userName}</p>
-        <p className="card-info">Email: {user?.email}</p>
-
+      {user && user.bio && (
+          <div className="bio-section">
+            <p>{user.bio}</p>
+          </div>
+        )}
         {!editing && (
           <button onClick={() => setEditing(true)} className="btn-edit">
             Edit Google Profile
@@ -156,6 +154,17 @@ const UpdateGoogleUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
                 required
               />
             </div>
+
+            <div className="form-group">
+            <label htmlFor="bio">Bio</label>
+            <textarea
+              id="bio"
+              placeholder="Tell us about yourself..."
+              defaultValue={user?.bio}
+              {...register("bio")}
+              className="bio-input"
+            />
+          </div>
 
             <div className="form-group">
               <label htmlFor="profilePicture">Profile Picture</label>

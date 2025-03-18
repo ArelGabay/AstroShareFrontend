@@ -7,9 +7,98 @@
 
 body {
   font-family: "Roboto", sans-serif;
-  background-color: #ffffff; /* Pure white background */
+  background-color: #ffffff;
   color: #333;
   min-height: 100vh;
+}
+
+/* App Container */
+.app-container {
+  background-color: #ffffff;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+}
+
+.astroshare-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.astroshare-logo svg {
+  height: 40px;
+  width: 40px;
+  color: #e60023;
+}
+
+.astroshare-logo span {
+  font-size: 32px;
+  font-weight: 900;
+  color: #e60023;
+}
+
+/* Profile Section */
+.profile-section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 15px 20px;
+  min-height: 80px;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-picture {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+  cursor: pointer;
+}
+
+.user-name {
+  margin-left: 15px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profile-placeholder {
+  width: 100%;
+  height: 60px;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Post Container */
+.post-container {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Toggle Button */
+.toggle-container {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .toggle-my-posts-btn {
@@ -31,36 +120,6 @@ body {
 
 .toggle-my-posts-btn:hover {
   background-color: #bf0811;
-}
-
-/* Navbar */
-.navbar {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: none;
-  padding: 20px 40px;
-  box-shadow: none;
-}
-
-.astroshare-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-}
-
-.astroshare-logo svg {
-  height: 40px;
-  width: 40px;
-  color: #e60023;
-}
-
-.astroshare-logo span {
-  font-size: 32px;
-  font-weight: 900;
-  color: #e60023;
 }
 
 /* Buttons */
@@ -102,7 +161,6 @@ body {
   background-color: #e0e0e0;
 }
 
-/* Edit Profile Button */
 .edit-profile-button {
   background-color: #f0f0f0;
   color: #333;
@@ -112,36 +170,14 @@ body {
   background-color: #e0e0e0;
 }
 
-/* Profile Section */
-.profile-section {
-  width: 100%;
+/* Auth Pages (Login/Register) */
+.auth-page-container {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding: 15px 20px;
-  background: none;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px;
 }
-
-.profile-picture {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #007bff;
-}
-
-.user-name {
-  margin-left: 15px;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-/* Page Container
-.page-container {
-  width: 100%;
-  max-width: 1200px;
-  padding: 20px;
-} */
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -171,5 +207,9 @@ body {
   .logout-button {
     width: 100%;
     justify-content: center;
+  }
+
+  .auth-page-container {
+    padding: 20px;
   }
 }

@@ -1,55 +1,58 @@
-/* Overall Post Card with fixed dimensions */
+/* Overall Post Card with increased dimensions */
 .post-card {
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 16px;
+  padding: 20px;
   margin-bottom: 20px;
   background-color: #fff;
-  width: 300px; /* Fixed width */
-  height: 500px; /* Enlarged fixed height */
+  width: 400px;         /* Increased width */
+  min-height: 550px;     /* Use min-height for flexibility */
   display: flex;
   flex-direction: column;
 }
 
 /* Header */
 .post-header {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .post-title {
   font-size: 1.3rem;
   margin: 0;
+  white-space: nowrap;       /* Keep on one line */
+  overflow-x: auto;         /* Enable horizontal scrolling */
 }
 
 .post-sender {
   color: #666;
-  margin: 4px 0;
+  margin: 6px 0;
 }
 
 /* Body */
 .post-body {
   flex: 1;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
+/* Increased text area for better readability */
 .post-content {
-  height: 120px; /* Fixed height for text area */
-  overflow-y: auto; /* Vertical scrolling if needed */
+  height: 150px;  /* Increased height for text area */
+  overflow-y: auto;
   overflow-x: hidden;
   white-space: normal;
   word-wrap: break-word;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
-/* Picture container: fixed to 200px x 200px */
+/* Enlarged picture container */
 .post-picture-container {
-  width: 200px;
-  height: 200px;
+  width: 250px;  /* Increased width */
+  height: 250px; /* Increased height */
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin: 20px auto 8px auto;
+  margin: 20px auto 16px auto;
 }
 
 .post-image {
@@ -58,25 +61,25 @@
   object-fit: cover;
 }
 
-/* Placeholder for no picture: white background with refined border */
+/* Placeholder for no picture */
 .no-picture {
   width: 100%;
   height: 100%;
-  box-sizing: border-box; /* Include border in element dimensions */
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffffff;
+  background-color: #fff;
   border: 2px dashed #ccc;
   border-radius: 8px;
 }
 
 .no-picture-icon {
-  font-size: 36px;
+  font-size: 40px; /* Slightly larger icon */
   color: #bbb;
 }
 
-/* Footer wrapper: using margin-top: auto to push it to the bottom */
+/* Footer positioned at the bottom */
 .post-footer-wrapper {
   margin-top: auto;
   width: 100%;
@@ -84,7 +87,6 @@
   justify-content: center;
 }
 
-/* Footer layout */
 .post-footer {
   display: inline-flex;
   align-items: center;
@@ -98,14 +100,14 @@
   align-items: center;
 }
 
-/* Icon button styling for a modern, circular look */
+/* Icon button styling */
 .icon-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
+  padding: 10px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: #fff;
   border: 1px solid #ddd;
   transition: background-color 0.3s ease, transform 0.2s ease;
   cursor: pointer;
@@ -141,30 +143,16 @@
   margin-left: 20px;
 }
 
-/* Optional styling for action buttons */
-/* Action section for update and delete buttons */
-.action-section {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-left: 20px;
-}
-
-/* Base styling for action buttons is inherited from .icon-button */
-
-/* Update button: subtle yellow */
 .action-button.update-button {
-  color: #ffb74d; /* Soft yellow */
+  color: #ffb74d;
   border-color: #ffb74d;
 }
 
-/* Delete button: subtle red */
 .action-button.delete-button {
-  color: #e57373; /* Soft red */
+  color: #e57373;
   border-color: #e57373;
 }
 
-/* Optionally, add a hover effect to intensify the color slightly */
 .action-button.update-button:hover {
   background-color: #ffe082;
 }

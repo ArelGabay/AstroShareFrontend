@@ -9,7 +9,7 @@ import {
   DeleteOutlined,
   EditOutlined,
 } from "@ant-design/icons";
-import UpdatePostModal from "./UpdatePostModal"; // Our custom update modal component
+import UpdatePostModal from "./UpdatePostModal";
 import "./Post.css";
 
 interface PostData {
@@ -24,10 +24,11 @@ interface PostData {
 interface PostProps {
   post: PostData;
   onDelete?: (id: string) => void;
+  onUpdate?: (updatedPost: PostData) => void; // New callback prop
 }
 
-const Post: FC<PostProps> = ({ post, onDelete }) => {
-  const currentUser = localStorage.getItem("username") || "Anonymous";
+const Post: FC<PostProps> = ({ post, onDelete, onUpdate }) => {
+  const currentUser = localStorage.getItem("userName") || "Anonymous";
   const token = localStorage.getItem("accessToken") || "";
   const navigate = useNavigate();
 
@@ -86,22 +87,19 @@ const Post: FC<PostProps> = ({ post, onDelete }) => {
     setUpdateModalVisible(true);
   };
 
-  // Updated handleUpdatePost function that only sends title, content and photo.
+  // Update post and call onUpdate callback
   const handleUpdatePost = async (updatedData: {
     title: string;
     content: string;
     photo?: File | null;
     deletePhoto?: boolean;
   }) => {
-    console.log("Updating post:", post._id, updatedData);
     const formData = new FormData();
     formData.append("title", updatedData.title);
     formData.append("content", updatedData.content);
     formData.append("pictureUrl", post.pictureUrl || "");
-    // Note: We don't update sender or likes here.
 
     if (updatedData.photo) {
-      // If a new photo was selected, append it
       formData.append("photo", updatedData.photo);
       if (post.pictureUrl) {
         formData.append("oldPictureUrl", post.pictureUrl);
@@ -123,9 +121,11 @@ const Post: FC<PostProps> = ({ post, onDelete }) => {
           },
         }
       );
-      console.log("Post updated:", response.data);
+      // Call the onUpdate callback with the updated post data
+      if (onUpdate) {
+        onUpdate(response.data);
+      }
       setUpdateModalVisible(false);
-      // Optionally update your UI based on response.data
     } catch (error) {
       console.error("Error updating post:", error);
     }
@@ -135,15 +135,12 @@ const Post: FC<PostProps> = ({ post, onDelete }) => {
     setUpdateModalVisible(false);
   };
 
-  // Delete functionality remains unchanged
   const handleDelete = async () => {
     try {
-      console.log("Delete post:", post._id);
       const endpoint = `http://localhost:3000/api/posts/${post._id}`;
-      const response = await axios.delete(endpoint, {
+      await axios.delete(endpoint, {
         headers: { Authorization: `JWT ${token}` },
       });
-      console.log("Post deleted:", response.data);
       if (onDelete) {
         onDelete(post._id);
       }
