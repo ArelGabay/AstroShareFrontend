@@ -50,7 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         profilePictureUrl: fullProfilePictureUrl,
         isGoogleUser,
       });
-
+      
+      localStorage.setItem("userName", userData.userName);
       localStorage.setItem("profilePictureUrl", fullProfilePictureUrl);
     } catch (err) {
       console.error("Failed to refresh user data", err);

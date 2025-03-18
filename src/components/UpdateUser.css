@@ -113,14 +113,24 @@
 
 /* Update Button (Green) */
 .btn-update {
-  background-color: #28a745;
+  width: 100%;
+  padding: 14px;
+  background: #e60023;
   color: #ffffff;
+  font-size: 16px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-update:hover {
-  background-color: #218838;
+  background: #bf0811;
   transform: translateY(-2px);
 }
+
+.btn
 
 /* Cancel Button (Red) */
 .btn-cancel {
