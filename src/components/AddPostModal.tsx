@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import "./UpdatePostModal.css"; // You can reuse the same CSS
+import axios from "axios";
+import { RocketOutlined } from "@ant-design/icons"; // Using Rocket icon
+import "./UpdatePostModal.css"; // Reusing the same CSS
 
 interface AddPostFormData {
   title: string;
@@ -19,9 +21,10 @@ interface AddPostProps {
 }
 
 const AddPostModal: React.FC<AddPostProps> = ({ visible, onAdd, onCancel }) => {
-  const { register, handleSubmit, watch, reset } = useForm<AddPostFormData>({
-    defaultValues: { title: "", content: "" },
-  });
+  const { register, handleSubmit, watch, reset, setValue } =
+    useForm<AddPostFormData>({
+      defaultValues: { title: "", content: "" },
+    });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Watch the file input for preview
@@ -33,6 +36,8 @@ const AddPostModal: React.FC<AddPostProps> = ({ visible, onAdd, onCancel }) => {
       setSelectedFile(null);
     }
   }, [watchedPhoto]);
+
+  const currentContent = watch("content") || "";
 
   // Reset form when modal opens/closes
   useEffect(() => {
@@ -51,6 +56,57 @@ const AddPostModal: React.FC<AddPostProps> = ({ visible, onAdd, onCancel }) => {
     onAdd(newData);
   };
 
+  // Generate function using Gemini AI.
+  const handleGenerate = async () => {
+    const currentContent = watch("content") || "";
+    console.log("Generate clicked. Current content:", currentContent);
+    const prompt = `Analyze the following content and determine if it mentions a specific place.
+If a place is mentioned, return a JSON object with two keys:
+  "title": a catchy title about that place, and
+  "content": an improved version of the original content and cool fact about that place.
+If no specific place is mentioned, return a JSON object with two keys (dont mention place not being mentioned):
+  "title": a catchy title, and
+  "content": an improved version of the original content.
+Content: "${currentContent}".
+Return only a valid JSON object.`;
+
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/api/ai/generate",
+        {
+          params: { prompt },
+          headers: {
+            Authorization: `JWT ${localStorage.getItem("accessToken") || ""}`,
+          },
+        }
+      );
+      console.log("AI response data:", response.data);
+      const generatedText = response.data.description;
+      console.log("Generated text:", generatedText);
+      // Remove code block markers if present
+      let cleanedText = generatedText.trim();
+      if (cleanedText.startsWith("```json") && cleanedText.endsWith("```")) {
+        cleanedText = cleanedText.substring(7, cleanedText.length - 3).trim();
+      }
+      try {
+        const jsonResult = JSON.parse(cleanedText);
+        if (jsonResult.title && jsonResult.content) {
+          setValue("title", jsonResult.title);
+          setValue("content", jsonResult.content);
+        } else {
+          setValue("title", cleanedText);
+          setValue("content", cleanedText);
+        }
+      } catch (parseError) {
+        console.error("Error parsing generated text as JSON:", parseError);
+        setValue("title", cleanedText);
+        setValue("content", cleanedText);
+      }
+    } catch (error) {
+      console.error("Error generating post content:", error);
+    }
+  };
+
   if (!visible) return null;
 
   return (
@@ -66,8 +122,19 @@ const AddPostModal: React.FC<AddPostProps> = ({ visible, onAdd, onCancel }) => {
               placeholder="Enter post title"
             />
           </div>
-          <div className="form-group">
-            <label>Content</label>
+          <div className="form-group content-group">
+            <div className="content-header">
+              <label>Content</label>
+              <button
+                type="button"
+                className="generate-btn"
+                onClick={handleGenerate}
+                title="Generate a catchy title and cool fact based on your content"
+                disabled={currentContent.trim() === ""}
+              >
+                <RocketOutlined style={{ fontSize: "16px" }} />
+              </button>
+            </div>
             <textarea
               {...register("content", { required: true })}
               rows={4}
