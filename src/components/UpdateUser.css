@@ -1,46 +1,114 @@
 /* UpdateUser.css */
-.update-user-card {
-  display: flex;
-  flex-direction: row;
-  width: 600px;
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  background-color: #ffffff;
-  transition: transform 0.3s ease;
-}
 
-.update-user-card:hover {
-  transform: translateY(-5px);
-}
-
-.update-user-card .card-img {
-  width: 220px;
-  height: auto;
-  object-fit: contain;
-  background-color: #f9f9f9;
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.update-user-card .card-content {
-  padding: 1.5rem;
-  flex: 1;
+/* Page-wide background and center the form */
+.update-user-page-container {
+  width: 100%;
+  margin: 0 auto;
+  min-height: calc(100vh - 300px); /* If you have a 300px navbar, else use 100vh */
+  background-color: #ffffff; 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start; /* or center if you want it centered vertically */
+  align-items: center;
+  box-sizing: border-box;
+  padding-top: 20px;
 }
 
-.update-user-card .card-info {
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-  color: #333;
-  font-weight: 500;
+/* The form container (card) */
+.update-user-form-container {
+  width: 400px;
+  min-height: 600px;
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
 }
 
-.update-user-card .btn-edit {
+/* Heading style */
+.update-user-form-container h2 {
+  color: #e60023;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+/* Profile picture wrapper */
+.profile-pic-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+}
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e60023;
+}
+.upload-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+.upload-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: #e60023;
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+.form-group label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+  color: #555;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fafafa;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #e60023;
+  outline: none;
+  box-shadow: 0 0 5px rgba(230, 0, 35, 0.25);
+}
+
+/* 
+   Make read-only fields appear lighter
+   pointer-events: none => you can't click or select them
+*/
+.form-group input[readonly],
+.form-group textarea[readonly] {
+  background-color: #f0f0f0;
+  color: #999;
+  pointer-events: none; 
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Original button styles */
+.btn-edit {
   padding: 12px 40px;
   background-color: #f0f0f0;
   color: #333;
@@ -51,67 +119,11 @@
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
-.update-user-card .btn-edit:hover {
+.btn-edit:hover {
   background-color: #e0e0e0;
   transform: translateY(-2px);
 }
 
-/* Update Form Styles */
-.update-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.update-form .form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.update-form label {
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.update-form input[type="password"],
-.update-form input[type="file"] {
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 16px;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
-}
-
-.update-form input[type="password"]:focus,
-.update-form input[type="file"]:focus {
-  border-color: #e60023;
-  outline: none;
-}
-
-/* Form Actions (Buttons) */
-.form-actions {
-  display: flex;
-  gap: 20px;
-  justify-content: flex-end;
-}
-
-.btn-update,
-.btn-cancel {
-  font-weight: 700;
-  font-size: 16px;
-  padding: 14px 40px;
-  border-radius: 35px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-/* Update Button (Green) */
 .btn-update {
   width: 100%;
   padding: 14px;
@@ -124,26 +136,28 @@
   font-weight: bold;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
 .btn-update:hover {
   background: #bf0811;
   transform: translateY(-2px);
 }
 
-.btn
-
-/* Cancel Button (Red) */
 .btn-cancel {
-  background-color: #e60023;
-  color: #ffffff;
+  background-color: #f0f0f0;
+  color: #333;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  border-radius: 35px;
+  padding: 14px 40px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
 .btn-cancel:hover {
-  background-color: #bf0811;
+  background-color: #e0e0e0;
   transform: translateY(-2px);
 }
 
-/* Message After Update */
+/* Message after update */
 .update-message {
   margin-top: 1rem;
   font-weight: 600;
