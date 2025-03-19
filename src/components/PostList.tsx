@@ -16,27 +16,25 @@ interface PostType {
   likes?: string[];
 }
 
-interface PostListProps {
-  filterByUser?: boolean;
-  userName?: string;
-}
-
-const PostList: FC<PostListProps> = ({
-  filterByUser = false,
-  userName = "",
-}) => {
+const PostList: FC = () => {
   const { user } = useAuth();
   const [posts, setPosts] = useState<PostType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
+  // New state: filter posts by the current user
+  const [filterByMe, setFilterByMe] = useState<boolean>(false);
   const postsPerPage = 3;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         let url = "http://localhost:3000/api/posts";
-        if (filterByUser && userName) {
-          url = `http://localhost:3000/api/posts/sender/${userName}`;
+        // When filtering, use the user ID from localStorage
+        if (filterByMe && user) {
+          const currentUserId = localStorage.getItem("userId");
+          if (currentUserId) {
+            url = `http://localhost:3000/api/posts/sender/${currentUserId}`;
+          }
         }
         const response = await axios.get(url);
         setPosts(response.data);
@@ -44,9 +42,8 @@ const PostList: FC<PostListProps> = ({
         console.error("Error fetching posts:", error);
       }
     };
-
     fetchPosts();
-  }, [filterByUser, userName]);
+  }, [filterByMe, user]);
 
   // Remove a deleted post from state
   const handlePostDelete = (id: string) => {
@@ -72,10 +69,7 @@ const PostList: FC<PostListProps> = ({
       const formData = new FormData();
       formData.append("title", newData.title);
       formData.append("content", newData.content);
-      formData.append(
-        "sender",
-        localStorage.getItem("userName") || "Anonymous"
-      );
+      formData.append("sender", localStorage.getItem("userId") || "Anonymous");
       if (newData.photo) {
         formData.append("photo", newData.photo);
       }
@@ -106,6 +100,24 @@ const PostList: FC<PostListProps> = ({
 
   return (
     <div style={{ position: "relative" }}>
+      {/* Toggle switch for filtering posts */}
+      <div className="toggle-filter-container">
+        <label className="toggle-switch">
+          <input
+            type="checkbox"
+            checked={filterByMe}
+            onChange={() => {
+              if (user) setFilterByMe(!filterByMe);
+            }}
+            disabled={!user}
+          />
+          <span className="slider"></span>
+        </label>
+        <span className="toggle-label">
+          {filterByMe ? "My Posts" : "All Posts"}
+        </span>
+      </div>
+
       <div
         style={{
           display: "flex",

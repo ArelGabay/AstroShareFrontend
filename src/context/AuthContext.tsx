@@ -2,6 +2,7 @@ import { createContext, useState, ReactNode, useEffect } from "react";
 import axios from "axios";
 
 interface UserType {
+  _id?: string;
   userName: string;
   profilePictureUrl?: string;
   isGoogleUser?: boolean; // Added
@@ -46,11 +47,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const isGoogleUser = !!userData.googleId; // true if googleId exists
 
       setUser({
+        _id: userData._id,
         userName: userData.userName,
         profilePictureUrl: fullProfilePictureUrl,
         isGoogleUser,
       });
-      
+
       localStorage.setItem("userName", userData.userName);
       localStorage.setItem("profilePictureUrl", fullProfilePictureUrl);
     } catch (err) {
@@ -66,9 +68,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       : "";
 
     localStorage.setItem("userName", userData.userName);
+    if (userData._id) {
+      localStorage.setItem("userId", userData._id);
+    }
     localStorage.setItem("profilePictureUrl", fullProfilePictureUrl);
 
     setUser({
+      _id: userData._id,
       userName: userData.userName,
       profilePictureUrl: fullProfilePictureUrl,
       isGoogleUser: userData.isGoogleUser || false, // default to false if not provided
@@ -87,6 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Remove refresh token from local storage first
       localStorage.removeItem("userName");
       localStorage.removeItem("username");
+      localStorage.removeItem("userId");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
 
@@ -99,6 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Ensure refreshToken is removed after logout
       localStorage.removeItem("userName");
       localStorage.removeItem("username");
+      localStorage.removeItem("userId");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
 

@@ -37,20 +37,31 @@ const LoginForm = () => {
     }
   }, [user, navigate]);
 
-  const onGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+  const onGoogleLoginSuccess = async (
+    credentialResponse: CredentialResponse
+  ) => {
     try {
-      if (!credentialResponse.credential) throw new Error("No Google credential");
+      if (!credentialResponse.credential)
+        throw new Error("No Google credential");
 
-      const response = await axios.post("http://localhost:3000/api/auth/google", {
-        credential: credentialResponse.credential,
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/google",
+        {
+          credential: credentialResponse.credential,
+        }
+      );
 
+      localStorage.setItem("userId", response.data._id);
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
       localStorage.setItem("userName", response.data.userName);
-      localStorage.setItem("profilePictureUrl", response.data.profilePictureUrl);
+      localStorage.setItem(
+        "profilePictureUrl",
+        response.data.profilePictureUrl
+      );
 
       login({
+        _id: response.data._id,
         userName: response.data.userName,
         profilePictureUrl: response.data.profilePictureUrl,
         isGoogleUser: true,
@@ -66,21 +77,29 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginForm) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", data);
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/login",
+        data
+      );
 
+      localStorage.setItem("userId", response.data._id);
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
       localStorage.setItem("userName", response.data.userName);
-      localStorage.setItem("profilePictureUrl", response.data.profilePictureUrl);
+      localStorage.setItem(
+        "profilePictureUrl",
+        response.data.profilePictureUrl
+      );
 
       login({
+        _id: response.data._id,
         userName: response.data.userName,
         profilePictureUrl: response.data.profilePictureUrl,
         isGoogleUser: false,
       });
 
       navigate("/");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setLoginError("Invalid email or password. Please try again.");
     } finally {
@@ -90,9 +109,8 @@ const LoginForm = () => {
 
   return (
     <div className="form-container">
-
       {/* Welcome Message */}
-    <h1 className="astroshare-welcome">Welcome to AstroShare</h1>
+      <h1 className="astroshare-welcome">Welcome to AstroShare</h1>
 
       {loginError && <p className="error-message">{loginError}</p>}
 
@@ -106,7 +124,9 @@ const LoginForm = () => {
             {...register("email")}
             className={errors.email ? "error" : ""}
           />
-          {errors.email && <p className="error-message">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="error-message">{errors.email.message}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -126,7 +146,9 @@ const LoginForm = () => {
               {showPassword ? "🙈" : "👁️"}
             </span>
           </div>
-          {errors.password && <p className="error-message">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="error-message">{errors.password.message}</p>
+          )}
         </div>
 
         <button type="submit" disabled={loading}>

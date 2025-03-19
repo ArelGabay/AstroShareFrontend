@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -6,6 +6,7 @@ import {
   CloseOutlined,
 } from "@ant-design/icons";
 import "./Comment.css";
+import axios from "axios";
 
 interface CommentProps {
   comment: {
@@ -19,14 +20,29 @@ interface CommentProps {
   onDelete: (id: string) => void;
 }
 
-const Comment: React.FC<CommentProps> = ({
-  comment,
-  currentUser,
-  onUpdate,
-  onDelete,
-}) => {
+const Comment: React.FC<CommentProps> = ({ comment, onUpdate, onDelete }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editedContent, setEditedContent] = useState<string>(comment.content);
+  const [userName, setUserName] = useState<string>("Anonymous");
+
+  // Fetch the user name using useEffect to avoid calling it on every render.
+  useEffect(() => {
+    const fetchUserById = async (userId: string) => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/users/id/${userId}`
+        );
+        setUserName(response.data.userName);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setUserName("Anonymous");
+      }
+    };
+
+    if (comment.sender) {
+      fetchUserById(comment.sender);
+    }
+  }, [comment.sender]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -45,7 +61,7 @@ const Comment: React.FC<CommentProps> = ({
   return (
     <div className="comment-card">
       <div className="comment-main">
-        <p className="comment-sender">By: {comment.sender}</p>
+        <p className="comment-sender">By: {userName}</p>
         {isEditing ? (
           <textarea
             className="comment-edit-textarea"
@@ -56,7 +72,7 @@ const Comment: React.FC<CommentProps> = ({
           <p className="comment-content">{comment.content}</p>
         )}
       </div>
-      {comment.sender === currentUser && (
+      {comment.sender === localStorage.getItem("userId") && (
         <div className="comment-actions">
           {isEditing ? (
             <>

@@ -17,6 +17,7 @@ const CommentsList: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
   const { user } = useAuth(); // Get logged-in user
   const currentUser = user ? user.userName : "Anonymous";
+  const userId = user ? user._id : "";
   const [comments, setComments] = useState<IComment[]>([]);
   const [addingComment, setAddingComment] = useState<boolean>(false);
   const [newComment, setNewComment] = useState<string>("");
@@ -44,7 +45,7 @@ const CommentsList: React.FC = () => {
     try {
       const response = await axios.post(
         "http://localhost:3000/api/comments",
-        { content: newComment, sender: currentUser, postId },
+        { content: newComment, sender: userId, postId },
         {
           headers: {
             Authorization: `JWT ${localStorage.getItem("accessToken") || ""}`,
@@ -63,7 +64,7 @@ const CommentsList: React.FC = () => {
     try {
       const response = await axios.put(
         `http://localhost:3000/api/comments/${id}`,
-        { content: newContent, sender: currentUser, postId },
+        { content: newContent, sender: userId, postId },
         {
           headers: {
             Authorization: `JWT ${localStorage.getItem("accessToken") || ""}`,

@@ -6,19 +6,21 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import "./Form.css"; 
+import "./Form.css";
 
 // Zod Validation
-const registerSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  userName: z.string().min(3, "Username must be at least 3 characters long"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
-  confirmPassword: z.string().min(6, "Confirm Password is required"),
-  profilePicture: z.any().optional(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
+const registerSchema = z
+  .object({
+    email: z.string().email("Invalid email address"),
+    userName: z.string().min(3, "Username must be at least 3 characters long"),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    confirmPassword: z.string().min(6, "Confirm Password is required"),
+    profilePicture: z.any().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterForm = z.infer<typeof registerSchema>;
 
@@ -56,23 +58,26 @@ const RegistrationForm: FC = () => {
       formData.append("userName", data.userName);
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);
-
       if (profilePicture && profilePicture.length > 0) {
         formData.append("profilePicture", profilePicture[0]);
       }
-
       const response = await axios.post(
         "http://localhost:3000/api/auth/register",
         formData
       );
-
       console.log("Registration successful:", response.data);
-
-      // Redirect to login after successful registration
       navigate("/login");
-    } catch (error) {
-      console.error("Registration error:", error);
-      alert("Registration failed. Please try again.");
+    } catch (error: unknown) {
+      if (
+        axios.isAxiosError(error) &&
+        error.response &&
+        error.response.data &&
+        error.response.data.error
+      ) {
+        alert(error.response.data.error);
+      } else {
+        alert("Registration failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -129,7 +134,9 @@ const RegistrationForm: FC = () => {
             placeholder="Enter your email"
             className={errors.email ? "error" : ""}
           />
-          {errors.email && <p className="error-message">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="error-message">{errors.email.message}</p>
+          )}
         </div>
 
         {/* Username */}
@@ -141,7 +148,9 @@ const RegistrationForm: FC = () => {
             placeholder="Choose a username"
             className={errors.userName ? "error" : ""}
           />
-          {errors.userName && <p className="error-message">{errors.userName.message}</p>}
+          {errors.userName && (
+            <p className="error-message">{errors.userName.message}</p>
+          )}
         </div>
 
         {/* Password */}
@@ -153,7 +162,9 @@ const RegistrationForm: FC = () => {
             placeholder="Enter your password"
             className={errors.password ? "error" : ""}
           />
-          {errors.password && <p className="error-message">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="error-message">{errors.password.message}</p>
+          )}
         </div>
 
         {/* Confirm Password */}
@@ -180,4 +191,3 @@ const RegistrationForm: FC = () => {
 };
 
 export default RegistrationForm;
-

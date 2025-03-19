@@ -16,7 +16,7 @@ interface PostData {
   _id: string;
   title: string;
   content: string;
-  sender: string;
+  sender: string; // Likely the user ID
   pictureUrl?: string;
   likes?: string[];
 }
@@ -29,23 +29,40 @@ interface PostProps {
 
 const Post: FC<PostProps> = ({ post, onDelete, onUpdate }) => {
   const currentUser = localStorage.getItem("userName") || "Anonymous";
+  const userId = localStorage.getItem("userId") || "";
   const token = localStorage.getItem("accessToken") || "";
   const navigate = useNavigate();
 
   const hasPicture = Boolean(post.pictureUrl);
 
   const [liked, setLiked] = useState<boolean>(
-    post.likes ? post.likes.includes(currentUser) : false
+    post.likes ? post.likes.includes(userId) : false
   );
   const [likeCount, setLikeCount] = useState<number>(
     post.likes ? post.likes.length : 0
   );
-  const [senderName, setSenderName] = useState<string>(post.sender);
+  const [senderName, setSenderName] = useState<string>("Loading sender...");
   const [commentCount, setCommentCount] = useState<number>(0);
   const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
 
+  // Fetch the sender's username using the sender ID
   useEffect(() => {
-    setSenderName(post.sender);
+    const fetchUserName = async (userId: string) => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/users/id/${userId}`
+        );
+        // Adjust based on the structure of your API response
+        setSenderName(response.data.userName);
+      } catch (error) {
+        console.error("Error fetching sender user name:", error);
+        setSenderName("Anonymous");
+      }
+    };
+
+    if (post.sender) {
+      fetchUserName(post.sender);
+    }
   }, [post.sender]);
 
   // Fetch comments count for this post
@@ -68,11 +85,11 @@ const Post: FC<PostProps> = ({ post, onDelete, onUpdate }) => {
       const endpoint = `http://localhost:3000/api/posts/like/${post._id}`;
       const response = await axios.post(
         endpoint,
-        { username: currentUser },
+        { username: currentUser, userId: userId },
         { headers: { Authorization: `JWT ${token}` } }
       );
       setLikeCount(response.data.likes.length);
-      setLiked(response.data.likes.includes(currentUser));
+      setLiked(response.data.likes.includes(userId));
     } catch (error) {
       console.error("Error toggling like:", error);
     }
@@ -195,7 +212,7 @@ const Post: FC<PostProps> = ({ post, onDelete, onUpdate }) => {
             </span>
             <span className="comments-count">{commentCount}</span>
           </div>
-          {post.sender === currentUser && (
+          {post.sender === userId && (
             <div className="action-section">
               <span
                 onClick={handleUpdateClick}
