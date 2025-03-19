@@ -13,6 +13,7 @@ export interface IUser {
   googleId?: string;
   profilePictureUrl?: string;
   refreshTokens?: string[];
+  bio?: string;
 }
 
 interface UpdateFormData {
@@ -20,6 +21,7 @@ interface UpdateFormData {
   newPassword: string;
   confirmPassword: string;
   profilePicture: FileList;
+  bio: string;
 }
 
 interface UpdateUserProps {
@@ -142,8 +144,6 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
         />  
       )}
       <div className="card-content">
-        <p className="card-info">Username: {user?.userName}</p>
-        <p className="card-info">Email: {user?.email}</p>
           {!editing && (
           <button onClick={() => setEditing(true)} className="btn-edit">
             Edit Profile
@@ -161,7 +161,18 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
               required
             />
           </div>
-        
+          
+          <div className="form-group">
+            <label htmlFor="bio">Bio</label>
+            <textarea
+              id="bio"
+              placeholder="Tell us about yourself..."
+              defaultValue={user?.bio}
+              {...register("bio")}
+              className="bio-input"
+            />
+          </div>
+
           <div className="form-group">
             <label htmlFor="profilePicture">Profile Picture</label>
             <input
