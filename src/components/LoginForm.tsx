@@ -11,7 +11,9 @@ import ChooseUsernameModal from "./ChooseUsernameModal";
 import "../components/Form.css";
 
 const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  username: z.string().regex(/^\S+$/, {
+    message: "Spaces are not allowed",
+  }),
   password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -151,16 +153,16 @@ const LoginForm = () => {
       {loginError && <p className="error-message">{loginError}</p>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label>Username</label>
           <input
-            id="email"
-            type="email"
-            placeholder="Enter your email"
-            {...register("email")}
-            className={errors.email ? "error" : ""}
+            id="username"
+            type="text"
+            placeholder="Enter your username"
+            {...register("username")}
+            className={errors.username ? "error" : ""}
           />
-          {errors.email && (
-            <p className="error-message">{errors.email.message}</p>
+          {errors.username && (
+            <p className="error-message">{errors.username.message}</p>
           )}
         </div>
         <div className="form-group">
