@@ -11,7 +11,7 @@ import ChooseUsernameModal from "./ChooseUsernameModal";
 import "../components/Form.css";
 
 const loginSchema = z.object({
-  username: z.string().regex(/^\S+$/, {
+  userName: z.string().regex(/^\S+$/, {
     message: "Spaces are not allowed",
   }),
   password: z.string().min(6, "Password must be at least 6 characters long"),
@@ -158,11 +158,11 @@ const LoginForm = () => {
             id="username"
             type="text"
             placeholder="Enter your username"
-            {...register("username")}
-            className={errors.username ? "error" : ""}
+            {...register("userName")}
+            className={errors.userName ? "error" : ""}
           />
-          {errors.username && (
-            <p className="error-message">{errors.username.message}</p>
+          {errors.userName && (
+            <p className="error-message">{errors.userName.message}</p>
           )}
         </div>
         <div className="form-group">
