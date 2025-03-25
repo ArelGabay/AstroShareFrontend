@@ -8,6 +8,8 @@ import { faImage } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import "./Form.css";
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 // Zod Validation
 const registerSchema = z
   .object({
@@ -62,7 +64,7 @@ const RegistrationForm: FC = () => {
         formData.append("profilePicture", profilePicture[0]);
       }
       const response = await axios.post(
-        "http://localhost:3000/api/auth/register",
+        backend_url + "/api/auth/register",
         formData
       );
       console.log("Registration successful:", response.data);
@@ -101,7 +103,7 @@ const RegistrationForm: FC = () => {
             src={
               selectedFile
                 ? URL.createObjectURL(selectedFile)
-                : "http://localhost:3000/public/default_profile.png" // Local public folder
+                : backend_url + "/public/default_profile.png" // Local public folder
             }
             alt="Profile"
             className="profile-pic"

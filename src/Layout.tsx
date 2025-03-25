@@ -8,6 +8,8 @@ export default function Layout() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
+  const backend_url = import.meta.env.VITE_BACKEND_URL;
+
   return (
     <>
       {/* Navbar */}
@@ -55,7 +57,7 @@ export default function Layout() {
                 src={
                   user?.profilePictureUrl?.startsWith("http")
                     ? user.profilePictureUrl
-                    : `http://localhost:3000/public/${user.profilePictureUrl}`
+                    : backend_url + `/public/${user.profilePictureUrl}`
                 }
                 alt="Profile"
                 className="profile-picture clickable"

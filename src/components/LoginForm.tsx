@@ -10,6 +10,8 @@ import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import ChooseUsernameModal from "./ChooseUsernameModal";
 import "../components/Form.css";
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 const loginSchema = z.object({
   userName: z.string().regex(/^\S+$/, {
     message: "Spaces are not allowed",
@@ -47,7 +49,7 @@ const LoginForm = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        backend_url + "/api/auth/login",
         data
       );
       localStorage.setItem("userId", response.data._id);
@@ -79,7 +81,7 @@ const LoginForm = () => {
       if (!credentialResponse.credential)
         throw new Error("No Google credential");
       const response = await axios.post(
-        "http://localhost:3000/api/auth/google",
+        backend_url + "/api/auth/google",
         {
           credential: credentialResponse.credential,
         }
@@ -119,7 +121,7 @@ const LoginForm = () => {
   const handleCompleteGoogleLogin = async (chosenUsername: string) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/google/complete",
+        backend_url + "/api/auth/google/complete",
         {
           credential: googleCredential,
           newUsername: chosenUsername,

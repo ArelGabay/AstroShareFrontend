@@ -12,6 +12,8 @@ import {
 import UpdatePostModal from "./UpdatePostModal";
 import "./Post.css";
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 interface PostData {
   _id: string;
   title: string;
@@ -50,7 +52,7 @@ const Post: FC<PostProps> = ({ post, onDelete, onUpdate }) => {
     const fetchUserName = async (userId: string) => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/users/id/${userId}`
+          backend_url + `/api/users/id/${userId}`
         );
         // Adjust based on the structure of your API response
         setSenderName(response.data.userName);
@@ -70,7 +72,7 @@ const Post: FC<PostProps> = ({ post, onDelete, onUpdate }) => {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/comments/post/${post._id}`
+          backend_url + `/api/comments/post/${post._id}`
         );
         setCommentCount(response.data.length);
       } catch (error) {
@@ -82,7 +84,7 @@ const Post: FC<PostProps> = ({ post, onDelete, onUpdate }) => {
 
   const handleLike = async () => {
     try {
-      const endpoint = `http://localhost:3000/api/posts/like/${post._id}`;
+      const endpoint = backend_url + `/api/posts/like/${post._id}`;
       const response = await axios.post(
         endpoint,
         { username: currentUser, userId: userId },
@@ -129,7 +131,7 @@ const Post: FC<PostProps> = ({ post, onDelete, onUpdate }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/posts/${post._id}`,
+        backend_url + `/api/posts/${post._id}`,
         formData,
         {
           headers: {
@@ -152,19 +154,20 @@ const Post: FC<PostProps> = ({ post, onDelete, onUpdate }) => {
     setUpdateModalVisible(false);
   };
 
-  const handleDelete = async () => {
-    try {
-      const endpoint = `http://localhost:3000/api/posts/${post._id}`;
-      await axios.delete(endpoint, {
-        headers: { Authorization: `JWT ${token}` },
-      });
-      if (onDelete) {
-        onDelete(post._id);
-      }
-    } catch (error) {
-      console.error("Error deleting post:", error);
+const handleDelete = async () => {
+  try {
+    const endpoint = backend_url + `/api/posts/${post._id}`;
+    await axios.delete(endpoint, {
+      headers: { Authorization: `JWT ${token}` },
+      data: { pictureUrl: post.pictureUrl }
+    });
+    if (onDelete) {
+      onDelete(post._id);
     }
-  };
+  } catch (error) {
+    console.error("Error deleting post:", error);
+  }
+};
 
   return (
     <div className="post-card">
@@ -180,7 +183,7 @@ const Post: FC<PostProps> = ({ post, onDelete, onUpdate }) => {
         <div className="post-picture-container">
           {hasPicture ? (
             <img
-              src={"http://localhost:3000/public/" + post.pictureUrl}
+              src={backend_url + "/public/" + post.pictureUrl}
               alt="Post visual"
               className="post-image"
             />

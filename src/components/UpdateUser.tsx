@@ -5,6 +5,8 @@ import axios from "axios";
 import { useAuth } from "../context/useAuth";
 import "./UpdateUser.css"; // Import the CSS defined above
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 export interface IUser {
   _id?: string;
   userName: string;
@@ -54,7 +56,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
           return;
         }
         const response = await axios.get(
-          `http://localhost:3000/api/users/${storedUsername}`
+          backend_url + `/api/users/${storedUsername}`
         );
         setUser(response.data[0]);
       } catch (err) {
@@ -78,20 +80,25 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
       formData.append("userName", data.userName);
       formData.append("bio", data.bio);
       if (data.profilePicture && data.profilePicture.length > 0) {
+        console.log("picture exists");
         formData.append("profilePicture", data.profilePicture[0]);
         if (user.profilePictureUrl) {
           formData.append("oldProfilePictureUrl", user.profilePictureUrl);
         }
       }
       const token = localStorage.getItem("accessToken");
+      console.log("formData", formData);
       const response = await axios.put(
-        `http://localhost:3000/api/users/${user.userName}`,
+        backend_url + `/api/users/${user.userName}`,
         formData,
         {
           headers: { Authorization: `JWT ${token}` },
+
         }
       );
       const updatedUser = response.data;
+      console.log("Updated user:", updatedUser);
+      console.log("response", response);
       setUser(updatedUser);
       setUpdateMessage("Profile updated successfully!");
       setEditing(false);
@@ -124,7 +131,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdate }) => {
                 ? URL.createObjectURL(selectedFile)
                 : user?.profilePictureUrl?.startsWith("http")
                 ? user.profilePictureUrl
-                : `http://localhost:3000/public/${user?.profilePictureUrl || ""}`
+                : backend_url + `/public/${user?.profilePictureUrl || ""}`
             }
             alt="Profile"
           />

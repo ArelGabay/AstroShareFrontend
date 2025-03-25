@@ -1,6 +1,8 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import axios from "axios";
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 interface UserType {
   _id?: string;
   userName: string;
@@ -28,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `http://localhost:3000/api/users/${storedUsername}`,
+        backend_url + `/api/users/${storedUsername}`,
         {
           headers: {
             Authorization: `JWT ${token}`,
@@ -41,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const fullProfilePictureUrl = userData.profilePictureUrl
         ? userData.profilePictureUrl.startsWith("http")
           ? userData.profilePictureUrl
-          : `http://localhost:3000/public/${userData.profilePictureUrl}`
+          : backend_url + `/public/${userData.profilePictureUrl}`
         : "";
 
       const isGoogleUser = !!userData.googleId; // true if googleId exists
@@ -64,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const fullProfilePictureUrl = userData.profilePictureUrl
       ? userData.profilePictureUrl.startsWith("http")
         ? userData.profilePictureUrl
-        : `http://localhost:3000/public/${userData.profilePictureUrl}`
+        : backend_url + `/public/${userData.profilePictureUrl}`
       : "";
 
     localStorage.setItem("userName", userData.userName);
@@ -99,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       console.log("Sending logout request with refreshToken:", refreshToken); // Debugging
 
-      await axios.post("http://localhost:3000/api/auth/logout", {
+      await axios.post(backend_url + "/api/auth/logout", {
         refreshToken,
       });
 

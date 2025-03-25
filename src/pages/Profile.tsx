@@ -1,6 +1,6 @@
 import React from "react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import UpdateUser, { IUser } from "../components/UpdateUser";
+import UpdateUser from "../components/UpdateUser";
 import UpdateGoogleUser from "../components/UpdateGoogleUser";
 import { useAuth } from "../context/useAuth";
 import "./Profile.css";

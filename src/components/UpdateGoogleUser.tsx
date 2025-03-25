@@ -5,6 +5,8 @@ import axios from "axios";
 import { useAuth } from "../context/useAuth";
 import "./UpdateUser.css"; // Using the same CSS file
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 export interface IUser {
   _id?: string;
   userName: string;
@@ -47,7 +49,7 @@ const UpdateGoogleUser: React.FC<UpdateGoogleUserProps> = ({ onUpdate }) => {
         const storedUsername = localStorage.getItem("userName");
         const token = localStorage.getItem("accessToken");
         const response = await axios.get(
-          `http://localhost:3000/api/users/${storedUsername}`,
+          backend_url + `/api/users/${storedUsername}`,
           { headers: { Authorization: `JWT ${token}` } }
         );
         setUser(response.data[0]);
@@ -75,7 +77,7 @@ const UpdateGoogleUser: React.FC<UpdateGoogleUserProps> = ({ onUpdate }) => {
       }
       const token = localStorage.getItem("accessToken");
       const response = await axios.put(
-        `http://localhost:3000/api/users/google/${user.userName}`,
+        backend_url + `/api/users/google/${user.userName}`,
         formData,
         { headers: { Authorization: `JWT ${token}` } }
       );
@@ -94,7 +96,7 @@ const UpdateGoogleUser: React.FC<UpdateGoogleUserProps> = ({ onUpdate }) => {
       } else {
         localStorage.setItem(
           "profilePictureUrl",
-          `http://localhost:3000/public/${updatedUser.profilePictureUrl}`
+          backend_url + `/public/${updatedUser.profilePictureUrl}`
         );
       }
       localStorage.setItem("userName", updatedUser.userName);
@@ -126,7 +128,7 @@ const UpdateGoogleUser: React.FC<UpdateGoogleUserProps> = ({ onUpdate }) => {
                 ? URL.createObjectURL(selectedFile)
                 : user?.profilePictureUrl?.startsWith("http")
                 ? user.profilePictureUrl
-                : `http://localhost:3000/public/${
+                : backend_url + `/public/${
                     user?.profilePictureUrl || ""
                   }`
             }

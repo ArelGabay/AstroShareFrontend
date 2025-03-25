@@ -4,6 +4,8 @@ import axios from "axios";
 import { RocketOutlined } from "@ant-design/icons"; // Using Rocket icon
 import "./UpdatePostModal.css"; // Reusing the same CSS
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 interface AddPostFormData {
   title: string;
   content: string;
@@ -72,7 +74,7 @@ Return only a valid JSON object.`;
 
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/ai/generate",
+        backend_url + "/api/ai/generate",
         {
           params: { prompt },
           headers: {

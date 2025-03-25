@@ -7,6 +7,8 @@ import AddPostModal from "./AddPostModal";
 import { useAuth } from "../context/useAuth";
 import "./PostList.css";
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 interface PostType {
   _id: string;
   title: string;
@@ -28,12 +30,12 @@ const PostList: FC = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        let url = "http://localhost:3000/api/posts";
+        let url = backend_url + "/api/posts";
         // When filtering, use the user ID from localStorage
         if (filterByMe && user) {
           const currentUserId = localStorage.getItem("userId");
           if (currentUserId) {
-            url = `http://localhost:3000/api/posts/sender/${currentUserId}`;
+            url = backend_url + `/api/posts/sender/${currentUserId}`;
           }
         }
         const response = await axios.get(url);
@@ -75,7 +77,7 @@ const PostList: FC = () => {
       }
       const token = localStorage.getItem("accessToken") || "";
       const response = await axios.post(
-        `http://localhost:3000/api/posts`,
+        backend_url + `/api/posts`,
         formData,
         {
           headers: {

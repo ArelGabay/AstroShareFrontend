@@ -6,6 +6,8 @@ import Comment from "./Comment";
 import { useAuth } from "../context/useAuth"; // Import your auth hook
 import "./CommentsList.css";
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 interface IComment {
   _id: string;
   content: string;
@@ -25,7 +27,7 @@ const CommentsList: React.FC = () => {
   const fetchComments = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/comments/post/${postId}`
+        backend_url + `/api/comments/post/${postId}`
       );
       setComments(response.data);
     } catch (error) {
@@ -44,7 +46,7 @@ const CommentsList: React.FC = () => {
     if (!newComment.trim()) return;
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/comments",
+        backend_url + "/api/comments",
         { content: newComment, sender: userId, postId },
         {
           headers: {
@@ -63,7 +65,7 @@ const CommentsList: React.FC = () => {
   const handleUpdateComment = async (id: string, newContent: string) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/comments/${id}`,
+        backend_url + `/api/comments/${id}`,
         { content: newContent, sender: userId, postId },
         {
           headers: {
@@ -81,7 +83,7 @@ const CommentsList: React.FC = () => {
 
   const handleDeleteComment = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:3000/api/comments/${id}`, {
+      await axios.delete(backend_url + `/api/comments/${id}`, {
         headers: {
           Authorization: `JWT ${localStorage.getItem("accessToken") || ""}`,
         },

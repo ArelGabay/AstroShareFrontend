@@ -8,6 +8,8 @@ import {
 import "./Comment.css";
 import axios from "axios";
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 interface CommentProps {
   comment: {
     _id: string;
@@ -30,7 +32,7 @@ const Comment: React.FC<CommentProps> = ({ comment, onUpdate, onDelete }) => {
     const fetchUserById = async (userId: string) => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/users/id/${userId}`
+          backend_url + `/api/users/id/${userId}`
         );
         setUserName(response.data.userName);
       } catch (error) {
