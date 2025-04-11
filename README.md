@@ -1,50 +1,96 @@
-# React + TypeScript + Vite
+# AstroShare - Final Course Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+AstroShare is a full-stack web application built using **Node.js (Express)** for the backend and **React with TypeScript** for the frontend. The project was developed as a collaborative final course project and follows a modular, secure, and scalable architecture.
 
-Currently, two official plugins are available:
+## 🌐 Live Access
+The application is deployed in **production mode** with HTTPS and is accessible via the domain provided by our instructor. It runs in the background using **PM2**, ensuring stability even when the terminal is closed.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🛠 Tech Stack
+- **Frontend**: React + TypeScript
+- **Backend**: Node.js + Express + TypeScript
+- **Database**: MongoDB (self-hosted with credentials)
+- **Authentication**: JWT (Access + Refresh Tokens) + Google Login
+- **Testing**: Unit tests for all internal APIs using Jest
+- **Documentation**: Swagger API Docs
+- **Deployment**: PM2, HTTPS (no external hosting)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## 📁 Repositories
+- [AstroShare Backend](https://github.com/Eilonasraf/AsroShareBackend)
+- [AstroShare Frontend](https://github.com/Eilonasraf/AsroShareFrontend)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+---
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 🔐 Authentication
+- Standard registration/login with username and password
+- OAuth login via Google
+- JWT-based authentication (Access & Refresh tokens)
+- Session persistence and logout capability
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+---
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## 👤 User Profile
+- Displays user details including profile picture
+- Shows all posts by the user
+- Allows the user to update profile picture and username
+
+---
+
+## 🧭 Astro + Trips Wall
+AstroShare combines an astronomy content feed with a social trip-sharing wall:
+- Users can create "trip posts" with location, image, and description
+- When uploading a trip, a fun astronomical fact is fetched using **Gemini AI** based on the location
+- Everyone can view, like, and comment on shared trips
+- Infinite scroll with paging for the trip feed
+
+---
+
+## 📤 Content Sharing Features
+- Users can create posts with image and text
+- Other users can view all posts
+- Users can edit/delete their own posts
+- Dedicated screen for "My Posts"
+- Infinite scroll with paging for content feed
+
+---
+
+## 💬 Comments & Likes
+- Each post supports comments (shown in a separate screen)
+- The number of comments is visible in the main feed
+- Users can like posts
+- All reactions are persisted in MongoDB
+
+---
+
+## 🔧 Project Infrastructure
+- Git is used with each contributor using personal profiles
+- Followed Gitflow with **branches and pull requests**
+- API documented using **Swagger**
+- Unit tests written for all internal APIs (excluding 3rd-party APIs)
+- Images stored on the server filesystem (not in DB or external service)
+
+---
+
+## 🎨 UI/UX Design
+- Custom-designed screens
+- Proper use of colors, layouts, screen space
+- Responsive and accessible design
+
+---
+
+## 🚀 Production & Deployment
+- Application is deployed in **production mode** on a dedicated server within the college infrastructure
+- MongoDB instance is self-hosted and secured with username/password
+- Both frontend and backend accessible via instructor-assigned domain without port
+
+---
+
+## 📜 License
+This project was built as part of an academic course and is for educational purposes only.
+
+---
+
+Thank you for visiting our project!
